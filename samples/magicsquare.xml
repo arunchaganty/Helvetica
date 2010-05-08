@@ -1,0 +1,81 @@
+<instance>
+<presentation name="Magic Square" format="XCSP 2.1">
+This is the magic square of order 3.
+</presentation>
+<domains nbDomains="1">
+<domain name="dom0" nbValues="9">
+1..9
+</domain>
+</domains>
+<variables nbVariables="9">
+<variable name="X0" domain="dom0"/>
+<variable name="X1" domain="dom0"/>
+<variable name="X2" domain="dom0"/>
+<variable name="X3" domain="dom0"/>
+<variable name="X4" domain="dom0"/>
+<variable name="X5" domain="dom0"/>
+<variable name="X6" domain="dom0"/>
+<variable name="X7" domain="dom0"/>
+<variable name="X8" domain="dom0"/>
+</variables>
+<constraints nbConstraints="8">
+<constraint name="C0" arity="3" scope="X0 X1 X2" reference="global:weightedSum">
+<parameters>
+[ { 1 X0 } { 1 X1 } { 1 X2 } ]
+<eq/>
+15
+</parameters>
+</constraint>
+<constraint name="C1" arity="3" scope="X3 X4 X5" reference="global:weightedSum">
+<parameters>
+[ { 1 X3 } { 1 X4 } { 1 X5 } ]
+<eq/>
+15
+</parameters>
+</constraint>
+<constraint name="C2" arity="3" scope="X6 X7 X8" reference="global:weightedSum">
+<parameters>
+[ { 1 X6 } { 1 X7 } { 1 X8 } ]
+<eq/>
+15
+</parameters>
+</constraint>
+<constraint name="C3" arity="3" scope="X0 X3 X6" reference="global:weightedSum">
+<parameters>
+[ { 1 X0 } { 1 X3 } { 1 X6 } ]
+<eq/>
+15
+</parameters>
+</constraint>
+<constraint name="C4" arity="3" scope="X1 X4 X7" reference="global:weightedSum">
+<parameters>
+[ { 1 X1 } { 1 X4 } { 1 X7 } ]
+<eq/>
+15
+</parameters>
+</constraint>
+<constraint name="C5" arity="3" scope="X2 X5 X8" reference="global:weightedSum">
+<parameters>
+[ { 1 X2 } { 1 X5 } { 1 X8 } ]
+<eq/>
+15
+</parameters>
+</constraint>
+<constraint name="C6" arity="3" scope="X0 X4 X8" reference="global:weightedSum">
+<parameters>
+[ { 1 X0 } { 1 X4 } { 1 X8 } ]
+<eq/>
+15
+</parameters>
+</constraint>
+<constraint name="C7" arity="3" scope="X2 X4 X6" reference="global:weightedSum">
+<parameters>
+[ { 1 X2 } { 1 X4 } { 1 X6 } ]
+<eq/>
+15
+</parameters>
+</constraint>
+<constraint name="C8" arity="9" scope="X0 X1 X2 X3 X4 X5 X6 X7 X8"
+reference="global:allDifferent" />
+</constraints>
+</instance>

@@ -1,0 +1,66 @@
+<instance>
+<presentation name="Test" format="XCSP 2.1">
+This is another instance represented in intention.
+</presentation>
+<domains nbDomains="3">
+<domain name="dom0" nbValues="7">
+0..6
+</domain>
+<domain name="dom1" nbValues="3">
+1 5 10
+</domain>
+<domain name="dom2" nbValues="10">
+1..5 11..15
+</domain>
+</domains>
+<variables nbVariables="5">
+<variable name="V0" domain="dom0"/>
+<variable name="V1" domain="dom0"/>
+<variable name="V2" domain="dom1"/>
+<variable name="V3" domain="dom2"/>
+<variable name="V4" domain="dom0"/>
+</variables>
+<predicates nbPredicates="4">
+<predicate name="P0">
+<parameters> int X0 int X1 </parameters>
+<expression>
+<functional> ne(X0,X1) </functional>
+</expression>
+</predicate>
+<predicate name="P1">
+<parameters> int X0 int X1 int X2 </parameters>
+<expression>
+<functional> ge(sub(X0,X1),X2) </functional>
+</expression>
+</predicate>
+<predicate name="P2">
+<parameters> int X0 int X1 int X2 </parameters>
+<expression>
+<functional> eq(sub(X0,X1),X2) </functional>
+</expression>
+</predicate>
+<predicate name="P3">
+<parameters> int X0 int X1 int X2 int X3 </parameters>
+<expression>
+<functional> eq(add(X0,X1),abs(sub(X3,X4))) </functional>
+</expression>
+</predicate>
+</predicates>
+<constraints nbConstraints="5">
+<constraint name="C0" arity="2" scope="V0 V1" reference="P0">
+<parameters> V0 V1 </parameters>
+</constraint>
+<constraint name="C1" arity="2" scope="V0 V3" reference="P1">
+<parameters> V3 V0 2 </parameters>
+</constraint>
+<constraint name="C2" arity="2" scope="V0 V2" reference="P2">
+<parameters> V2 V0 2 </parameters>
+</constraint>
+<constraint name="C3" arity="3" scope="V1 V2 V3" reference="P3">
+<parameters> V1 2 V2 V3 </parameters>
+</constraint>
+<constraint name="C4" arity="2" scope="V1 V4" reference="P0">
+<parameters> V1 V4 </parameters>
+</constraint>
+</constraints>
+</instance>

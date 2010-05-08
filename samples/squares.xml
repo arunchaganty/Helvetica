@@ -1,0 +1,211 @@
+<instance>
+<presentation name="squares" nbSolutions="at least 1" format="XCSP 2.1">
+This is the squares instance represented in intension.
+</presentation>
+<domains nbDomains="1">
+<domain name="D0" nbValues="200">
+1..200
+</domain>
+</domains>
+<variables nbVariables="25">
+<variable name="V0" domain="D0"/>
+<variable name="V1" domain="D0"/>
+<variable name="V2" domain="D0"/>
+<variable name="V3" domain="D0"/>
+<variable name="V4" domain="D0"/>
+<variable name="V5" domain="D0"/>
+<variable name="V6" domain="D0"/>
+<variable name="V7" domain="D0"/>
+<variable name="V8" domain="D0"/>
+<variable name="V9" domain="D0"/>
+<variable name="V10" domain="D0"/>
+<variable name="V11" domain="D0"/>
+<variable name="V12" domain="D0"/>
+<variable name="V13" domain="D0"/>
+<variable name="V14" domain="D0"/>
+<variable name="V15" domain="D0"/>
+<variable name="V16" domain="D0"/>
+<variable name="V17" domain="D0"/>
+<variable name="V18" domain="D0"/>
+<variable name="V19" domain="D0"/>
+<variable name="V20" domain="D0"/>
+<variable name="V21" domain="D0"/>
+<variable name="V22" domain="D0"/>
+<variable name="V23" domain="D0"/>
+<variable name="V24" domain="D0"/>
+</variables>
+
+<predicates nbPredicates="5">
+<predicate name="P0">
+<parameters> int X0 int X1 </parameters>
+<expression>
+<functional> lt(X0,X1) </functional>
+</expression>
+</predicate>
+<predicate name="P1">
+<parameters> int X0 int X1 int X2 </parameters>
+<expression>
+<functional> eq(add(X0,X1),X2) </functional>
+</expression>
+</predicate>
+<predicate name="P2">
+<parameters> int X0 int X1 int X2 int X3</parameters>
+<expression>
+<functional> eq(add(X0,X1,X2),X3) </functional>
+</expression>
+</predicate>
+<predicate name="P3">
+<parameters> int X0 int X1 int X2 int X3 int X4</parameters>
+<expression>
+<functional> eq(add(X0,X1,X2,X3),X4) </functional>
+</expression>
+</predicate>
+<predicate name="P4">
+<parameters> int X0 int X1 int X2 int X3 int X4 int X5 int X6 int X7 int X8 int X9 int X10 int X11 int X12 int X13 int X14 int X15 int X16 int X17 int X18 int X19 int X20 int X21 int X22 int X23 int X24</parameters>
+<expression>
+<functional> eq(add(mul(X0,X0),mul(X1,X1),mul(X2,x2),mul(X3,X3),mul(X4,X4),mul(X5,X5),mul(X6,X6),mul(X7,X7),mul(X8,X8),mul(X9,X9),mul(X10,X10),mul(X11,X11),mul(X12,X12),mul(X13,X13)mul(X14,X14),mul(X15,X15),mul(X16,X16),mul(X17,X17),mul(X18,X18),mul(X19,X19),mul(X20,X20),mul(X21,X21),mul(X22,X22),mul(X23,X23)),mul(X24,X24)) </functional>
+</expression>
+</predicate>
+</predicates>
+
+<constraints nbConstraints="46">
+<constraint name="C0" arity="2" scope="V0 V1" reference="P0">
+<parameters> V0 V1 </parameters>
+</constraint>
+<constraint name="C1" arity="2" scope="V1 V2" reference="P0">
+<parameters> V1 V2 </parameters>
+</constraint>
+<constraint name="C2" arity="2" scope="V2 V3" reference="P0">
+<parameters> V2 V3 </parameters>
+</constraint>
+<constraint name="C3" arity="2" scope="V3 V4" reference="P0">
+<parameters> V3 V4 </parameters>
+</constraint>
+<constraint name="C4" arity="2" scope="V4 V5" reference="P0">
+<parameters> V4 V5 </parameters>
+</constraint>
+<constraint name="C5" arity="2" scope="V5 V6" reference="P0">
+<parameters> V5 V6 </parameters>
+</constraint>
+<constraint name="C6" arity="2" scope="V6 V7" reference="P0">
+<parameters> V6 V7 </parameters>
+</constraint>
+<constraint name="C7" arity="2" scope="V7 V8" reference="P0">
+<parameters> V7 V8 </parameters>
+</constraint>
+<constraint name="C8" arity="2" scope="V8 V9" reference="P0">
+<parameters> V8 V9 </parameters>
+</constraint>
+<constraint name="C9" arity="2" scope="V9 V10" reference="P0">
+<parameters> V9 V10 </parameters>
+</constraint>
+<constraint name="C10" arity="2" scope="V10 V11" reference="P0">
+<parameters> V10 V11 </parameters>
+</constraint>
+<constraint name="C11" arity="2" scope="V11 V12" reference="P0">
+<parameters> V11 V12 </parameters>
+</constraint>
+<constraint name="C12" arity="2" scope="V12 V13" reference="P0">
+<parameters> V12 V13 </parameters>
+</constraint>
+<constraint name="C13" arity="2" scope="V13 V14" reference="P0">
+<parameters> V13 V14 </parameters>
+</constraint>
+<constraint name="C14" arity="2" scope="V14 V15" reference="P0">
+<parameters> V14 V15 </parameters>
+</constraint>
+<constraint name="C15" arity="2" scope="V15 V16" reference="P0">
+<parameters> V15 V16 </parameters>
+</constraint>
+<constraint name="C16" arity="2" scope="V16 V17" reference="P0">
+<parameters> V16 V17 </parameters>
+</constraint>
+<constraint name="C17" arity="2" scope="V17 V18" reference="P0">
+<parameters> V17 V18 </parameters>
+</constraint>
+<constraint name="C18" arity="2" scope="V18 V19" reference="P0">
+<parameters> V18 V19 </parameters>
+</constraint>
+<constraint name="C19" arity="2" scope="V19 V20" reference="P0">
+<parameters> V19 V20 </parameters>
+</constraint>
+<constraint name="C20" arity="2" scope="V20 V21" reference="P0">
+<parameters> V20 V21 </parameters>
+</constraint>
+<constraint name="C21" arity="2" scope="V21 V22" reference="P0">
+<parameters> V21 V22 </parameters>
+</constraint>
+<constraint name="C22" arity="2" scope="V22 V23" reference="P0">
+<parameters> V22 V23 </parameters>
+</constraint>
+<constraint name="C23" arity="2" scope="V23 V24" reference="P0">
+<parameters> V23 V24 </parameters>
+</constraint>
+<constraint name="C24" arity="3" scope="V0 V2 V3" reference="P1">
+<parameters> V0 V2 V3 </parameters>
+</constraint>
+<constraint name="C25" arity="3" scope="V3 V0 V4" reference="P1">
+<parameters> V3 V0 V4 </parameters>
+</constraint>
+<constraint name="C26" arity="3" scope="V3 V4 V6" reference="P1">
+<parameters> V3 V4 V6 </parameters>
+</constraint>
+<constraint name="C27" arity="3" scope="V4 V6 V7" reference="P1">
+<parameters> V4 V6 V7 </parameters>
+</constraint>
+<constraint name="C28" arity="3" scope="V1 V11 V13" reference="P1">
+<parameters> V1 V11 V13 </parameters>
+</constraint>
+<constraint name="C29" arity="3" scope="V1 V13 V14" reference="P1">
+<parameters> V1 V13 V14 </parameters>
+</constraint>
+<constraint name="C30" arity="3" scope="V1 V14 V15" reference="P1">
+<parameters> V1 V14 V15 </parameters>
+</constraint>
+<constraint name="C31" arity="3" scope="V9 V10 V16" reference="P1">
+<parameters> V9 V10 V16 </parameters>
+</constraint>
+<constraint name="C32" arity="3" scope="V5 V18 V19" reference="P1">
+<parameters> V5 V18 V19 </parameters>
+</constraint>
+<constraint name="C33" arity="3" scope="V8 V17 V20" reference="P1">
+<parameters> V8 V17 V20 </parameters>
+</constraint>
+<constraint name="C34" arity="3" scope="V9 V16 V21" reference="P1">
+<parameters> V9 V16 V21 </parameters>
+</constraint>
+<constraint name="C35" arity="3" scope="V13 V14 V22" reference="P1">
+<parameters> V13 V14 V22 </parameters>
+</constraint>
+<constraint name="C36" arity="3" scope="V12 V19 V23" reference="P1">
+<parameters> V12 V19 V23 </parameters>
+</constraint>
+<constraint name="C37" arity="3" scope="V5 V15 V18" reference="P1">
+<parameters> V5 V15 V18 </parameters>
+</constraint>
+<constraint name="C38" arity="4" scope="V2 V3 V6 V8" reference="P2">
+<parameters> V2 V3 V6 V8 </parameters>
+</constraint>
+<constraint name="C39" arity="4" scope="V0 V4 V7 V10" reference="P2">
+<parameters> V0 V4 V7 V10 </parameters>
+</constraint>
+<constraint name="C40" arity="4" scope="V6 V7 V8 V17" reference="P2">
+<parameters> V6 V7 V8 V17 </parameters>
+</constraint>
+<constraint name="C41" arity="4" scope="V20 V21 V22 V24" reference="P2">
+<parameters> V20 V21 V22 V24 </parameters>
+</constraint>
+<constraint name="C42" arity="4" scope="V17 V20 V23 V24" reference="P2">
+<parameters> V17 V20 V23 V24 </parameters>
+</constraint>
+<constraint name="C43" arity="4" scope="V18 V19 V23 V24" reference="P2">
+<parameters> V18 V19 V23 V24 </parameters>
+</constraint>
+<constraint name="C44" arity="5" scope="V14 V15 V18 V22 V24" reference="P3">
+<parameters> V14 V15 V18 V22 V24 </parameters>
+</constraint>
+<constraint name="C45" arity="25" scope="V0 V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 V21 V22 V23 V24" reference="P4">
+<parameters> V0 V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 V21 V22 V23 V24 </parameters>
+</constraint>
+</constraints>
+</instance>
