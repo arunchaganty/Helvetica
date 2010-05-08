@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instance>
+
+<presentation name="ParserTest" format="XCSP 2.1">
+A dummy instance to test the XML parser
+</presentation>
+
+<domains nbDomains="3">
+  <domain name="dom0" nbValues="7">0..6</domain>
+  <domain name="dom1" nbValues="3">1 5 10</domain>
+  <domain name="dom2" nbValues="10">1..5 11..15 20</domain>
+</domains>
+
+<variables nbVariables="8">
+  <variable name="X0" domain="dom0"/>
+  <variable name="X1" domain="dom0"/>
+  <variable name="X2" domain="dom1"/>
+  <variable name="X3" domain="dom2"/>
+  <variable name="X4" domain="dom0"/>
+  <variable name="X5" domain="dom0"/>
+  <variable name="X6" domain="dom0"/>
+  <variable name="X7" domain="dom0"/>
+</variables>
+
+<relations nbRelations="3">
+<relation name="R0" arity="2" nbTuples="5" semantics="conflicts">
+1 1|1 2|1 3|1 4|1 5
+</relation>
+
+<relation name="R1" arity="2" nbTuples="5" semantics="supports">
+1 1|1 2|1 3|1 4|1 5
+</relation>
+
+<relation name="R2" arity="2" nbTuples="5" semantics="soft" defaultCost="5">
+1 1|10:1 2|1 3|20:1 4|1 5
+</relation>
+
+</relations>
+
+<predicates nbPredicates="1">
+<predicate name="pred">
+  <parameters>int X0 int X1 int X2</parameters>
+  <expression> 
+    <functional>gt(div(sub(X0,X1),X2),X2)</functional>
+  </expression>
+</predicate>
+</predicates>
+
+<constraints nbConstraints="11">
+
+<constraint name="C0" arity="2" scope="X1 X0" reference="R0"/>
+<constraint name="C1" arity="2" scope="X1 X2" reference="R1"/>
+<constraint name="C3" arity="2" scope="X2 X3" reference="R2"/>
+
+<constraint name="C4" arity="3" scope="X4 X5 X6" reference="pred">
+  <parameters>X6 X4 X5</parameters>
+</constraint>
+
+<constraint name="C5" arity="8" scope="X0 X1 X2 X3 X4 X5 X6 X7" reference="global:alldifferent"/>
+
+<constraint name="C6" arity="6" scope="X0 X1 X2 X3 X4 X5" reference="global:weightedSum">
+  <parameters>[ {1 X0} {1 X1} {1 X2} {1 X3}{1 X4}{1 X5}] <eq/> 111</parameters>
+</constraint>
+
+<constraint name="C7" arity="6" scope="X1 X2 X3 X4 X5 X6" reference="global:element">
+  <parameters>X1 [X2 X3 X4 X5] X6</parameters>
+</constraint>
+
+<constraint name="C8" arity="2" scope="X0 X1 X2 X3 X4 X5 X6 X7" reference="global:cumulative">
+  <parameters>
+    <list>
+      <dict>
+	<entry key="origin"><var name="X0"/></entry>
+	<entry key="duration"><var name="X1"/></entry>
+	<entry key="end"><var name="X2"/></entry>
+	<entry key="height"><var name="X3"/></entry>
+      </dict>
+      <dict>
+	<entry key="origin"><var name="X4"/></entry>
+	<entry key="duration"><var name="X5"/></entry>
+	<entry key="end"><var name="X6"/></entry>
+	<entry key="height"><var name="X7"/></entry>
+      </dict>
+    </list>
+    <i> 8 </i>
+  </parameters>
+</constraint>
+
+<constraint name="C9" arity="2" scope="X0 X1 X2 X3 X4 X5 X6 X7" reference="global:cumulative">
+  <parameters>
+    [
+      { /origin X0 /duration 33 /end X2 /height 22 }
+      { X4 X5 25 X7 }
+      { X5 55 <nil/> <nil/> }
+    ]
+    16
+  </parameters>
+</constraint>
+
+<constraint name="C10" arity="6" scope="X1 X2 X3 X4 X5 X6" reference="global:cumulative">
+  <parameters>[ { X1 X2 <nil/> X3 } { X4 X5 <nil/> X6 } ] 10 </parameters> 
+</constraint>
+ 
+</constraints>
+</instance>
