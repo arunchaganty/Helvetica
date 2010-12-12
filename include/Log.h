@@ -8,6 +8,11 @@
 #ifndef LOG_H
 #define LOG_H
 
+#include <string>
+#include <fstream>
+#include <iostream>
+using namespace std;
+
 class Log
 {
     public:
