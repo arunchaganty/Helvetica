@@ -6,6 +6,7 @@ ROOTDIR=./
 include Makefile.inc
 
 TARGETS=bin/helvetica
+TESTS = tests/tuples #tests/parser
 
 PRJNAME=helvetica
 VERSION=0.1
@@ -22,6 +23,8 @@ OBJS=$(LIB_OBJS) $(BIN_OBJS)
 
 all: $(TARGETS)
 
+tests: $(TESTS)
+
 bin/helvetica: ${OBJS}
 	if [ ! -e bin ]; then mkdir bin; fi;
 	$(CC) $(LDFLAGS) $^ -o $@
@@ -30,6 +33,12 @@ bin/helvetica: ${OBJS}
 ${OBJS}: obj/%.o : src/%.cpp ${GLOBAL_HEADERS}
 	if [ ! -e obj ]; then mkdir obj; fi;
 	$(CC) $(CFLAGS) -c $< -o $@
+
+${TESTS}: tests/% : tests/%.cpp ${LIB_OBJS}
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+
+test: tests
+	./test.sh
 
 src-dist: 
 	rm -rf $(PRJNAME)-src-$(VERSION)
@@ -45,7 +54,7 @@ bin-dist: all
 	tar -czf $(PRJNAME)-$(VERSION).tar.gz $(PRJNAME)-$(VERSION)/
 	rm -r $(PRJNAME)-$(VERSION)
 
-.PHONY: clean doc 
+.PHONY: clean clean-tests doc test
 
 doc: 
 	doxygen
@@ -55,3 +64,5 @@ clean:
 	rm -rf lib/*
 	rm -rf obj/*
 
+clean-tests:
+	rm -rf $(TESTS)
