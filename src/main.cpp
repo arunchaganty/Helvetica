@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <string>
+#include <iostream>
 
 #include "CSP.h"
 #include "CSPSolver.h"
@@ -17,6 +18,8 @@
 
 using namespace std;
 using namespace Helvetica;
+
+Log* g_Log;
 
 extern int optind, opterr;
 
@@ -45,6 +48,8 @@ bool is_file( string fname )
 int main( int argc, char* argv[] )
 {
     int opt;
+
+    g_Log = &Log::create( cerr, Log::DEBUG );
 
     // Parse command line options 
     while( ( opt = getopt( argc, argv, "vh" ) ) != -1 )

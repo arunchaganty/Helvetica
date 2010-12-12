@@ -5,6 +5,11 @@
 * Helvetica - CSP Workbench
 */
 
+#ifndef HELVETICA_H
+#define HELVETICA_H
+
+#include "Log.h"
+
 namespace Helvetica 
 {
     const int UNSET = -1;
@@ -27,4 +32,6 @@ namespace Helvetica
 
     };
 };
+
+#endif // HELVETICA_H
 

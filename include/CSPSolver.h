@@ -5,6 +5,9 @@
 * Helvetica - CSP Workbench : CSP Solver base class
 */
 
+#ifndef CSPSOLVER_H
+#define CSPSOLVER_H
+
 #include <vector>
 #include <cassert>
 using namespace std;
@@ -96,3 +99,6 @@ namespace Helvetica
     };
 
 };
+
+#endif // CSPSOLVER_H
+

@@ -5,6 +5,9 @@
 * Helvetica - CSP Workbench
 */
 
+#ifndef CSP_H
+#define CSP_H
+
 #include <vector>
 #include <string>
 #include <cassert>
@@ -78,8 +81,15 @@ namespace Helvetica
         vector<Domain> domains; // Domains
         vector<Relation> relations; // Relations
 
+        /**
+         * Parse a XML-CSP problem
+         * 
+         * @args filename - path to xml-csp file
+         */
         static CSP& parse( string filename );
     };
 
 };
+
+#endif // CSP_H
 
