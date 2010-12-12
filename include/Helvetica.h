@@ -5,7 +5,26 @@
 * Helvetica - CSP Workbench
 */
 
-namespace Helvetica {
+namespace Helvetica 
+{
+    const int UNSET = -1;
 
+    enum Mode
+    {
+        NORMAL=0,
+    };
+
+    struct Options
+    {
+        Mode mode;
+        bool isVerbose;
+
+        Options()
+        {
+            mode = NORMAL;
+            isVerbose = false;
+        }
+
+    };
 };
 
