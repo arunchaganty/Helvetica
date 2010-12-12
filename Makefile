@@ -6,7 +6,7 @@ ROOTDIR=./
 include Makefile.inc
 
 TARGETS=bin/helvetica
-TESTS = tests/tuples #tests/parser
+TESTS = tests/tuples tests/parser
 
 PRJNAME=helvetica
 VERSION=0.1
@@ -16,8 +16,8 @@ DISTFILES=$(TARGETS) tests/ doc/ README
 CFLAGS += `pkg-config --cflags libxml-2.0`
 LDFLAGS +=  `pkg-config --libs libxml-2.0`
 
-LIB_OBJS=
-BIN_OBJS=obj/main.o obj/CSP.o obj/CSPSolver.o obj/Log.o
+LIB_OBJS=obj/CSP.o obj/CSPSolver.o obj/Log.o
+BIN_OBJS=obj/main.o
 GLOBAL_HEADERS=
 OBJS=$(LIB_OBJS) $(BIN_OBJS)
 

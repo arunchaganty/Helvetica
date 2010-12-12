@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TESTS="tuples"
+TESTS="tuples parser"
 
 cd tests;
 # Systematically test all programs

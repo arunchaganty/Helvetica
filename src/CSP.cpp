@@ -34,7 +34,7 @@ namespace Helvetica
         va_list lst;
 
         va_start( lst, v1 );
-        value[ 1 ] = v1;
+        value[ 0 ] = v1;
         for( int i = 1; i < n; i++ )
         {
             value[ i ] = va_arg( lst, int );
@@ -58,22 +58,28 @@ namespace Helvetica
 
             virtual void beginDomainsSection(int nbDomains) 
             {  
-                // Extend the number of domains to N
+                // Extend the number of domains to N 
                 problem.domains.resize( nbDomains );
                 domain_idx = 0;
             }
             virtual void beginDomain(const string & name, int idDomain, int nbValue) 
             {
                 assert( domain_idx == (unsigned int) idDomain );
-                problem.domains[ domain_idx ].resize( nbValue );
+                // Note: This doesn't really hold true - we need to extend to
+                // the largest possible value
+                problem.domains[ domain_idx ].resize( nbValue, false );
             }
             virtual void addDomainValue(int v) 
             {
-                problem.domains[ domain_idx ][ v-1 ] = true;
+                if( (unsigned int) v > problem.domains[ domain_idx ].size() )
+                    problem.domains[ domain_idx ].resize( v+1, false );
+                problem.domains[ domain_idx ][ v ] = true;
             }
             virtual void addDomainValue(int first,int last) 
             {
-                for( int v = first-1; v < last; v++ ) 
+                if( (unsigned int) last > problem.domains[ domain_idx ].size() )
+                    problem.domains[ domain_idx ].resize( last+1, false );
+                for( int v = first; v < last; v++ ) 
                     problem.domains[ domain_idx ][ v ] = true;
             }
             virtual void endDomain() 
@@ -187,7 +193,7 @@ namespace Helvetica
                 assert( (unsigned int)id < problem.relations.size() );
 
                 vector<int> scope_;
-                for(int i=1;i<scope.size();++i)
+                for(int i=0;i<scope.size();++i)
                     scope_.push_back( scope[i].getVarId() );
 
                 switch( type )
