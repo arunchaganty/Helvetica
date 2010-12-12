@@ -11,6 +11,10 @@
 #include <set>
 using namespace std;
 
+#include "Log.h"
+
+Log* g_Log;
+
 void foo( set< vector< int > >& s, int n, int values[] )
 {
     vector<int> v( n, -1 );
@@ -20,6 +24,8 @@ void foo( set< vector< int > >& s, int n, int values[] )
 
 int main( int argc, char* argv[] )
 {
+    g_Log = &Log::create( cerr, Log::DEBUG );
+
     set< vector< int > > s;
     int values[] = {1,2,3};
     vector<int> t;
