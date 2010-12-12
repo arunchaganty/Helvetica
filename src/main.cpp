@@ -37,12 +37,7 @@ bool is_file( string fname )
 {
     // Validate input
     struct stat st;
-    if( stat( fname.c_str(), &st ) != 0 )
-    {
-        return S_ISREG( st.st_mode );
-    }
-
-    return false;
+    return ( stat( fname.c_str(), &st ) == 0 && S_ISREG( st.st_mode ) );
 }
 
 int main( int argc, char* argv[] )
@@ -60,9 +55,12 @@ int main( int argc, char* argv[] )
                 g_Options.isVerbose = true;
                 break;
             case 'h':
+                print_help( stdout, argv );
+                exit( EXIT_SUCCESS );
+                break;
             default: /* '?' */
                 print_help( stderr, argv );
-                exit( EXIT_SUCCESS );
+                exit( EXIT_FAILURE );
         }
     }
 
@@ -77,10 +75,15 @@ int main( int argc, char* argv[] )
         }
         CSP problem = CSP::parse( filename );
         // TODO: Make a solver specific options file
-        CSPSolver solver = CSPSolver::create( CSPSolver::Settings( ) );
+        //CSPSolver solver = CSPSolver::create( CSPSolver::Settings( ) );
 
-        CSPSolution& sol = solver.solve( problem );
+        //CSPSolution& sol = solver.solve( problem );
         // Print solution
+    }
+    else
+    {
+        print_help( stderr, argv );
+        exit( EXIT_FAILURE );
     }
 
 

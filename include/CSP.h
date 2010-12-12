@@ -9,9 +9,11 @@
 #define CSP_H
 
 #include <vector>
+#include <set>
 #include <string>
 #include <cassert>
 #include <cstdarg>
+#include "tuple.h"
 using namespace std;
 
 namespace Helvetica 
@@ -22,53 +24,45 @@ namespace Helvetica
 
     struct Relation
     {
+        enum Semantics
+        {
+            SUPPORTS,
+            CONFLICTS
+        };
+
         int arity;
         vector<Domain*> domains;
-        bv_t valid;
+        Semantics semantics;
+        set< tuple<int> > values;
 
-        Relation( int arity, ... );
-        Relation( int arity, va_list domain_lst );
-        
-        /* Accessors */
-
-        inline int index( val_t v1 )
+        Relation( int arity, Semantics semantics );
+        inline bool test( tuple<int> value )
         {
-            assert( arity == 1 );
-            int idx = v1;
-            return idx;
+            return semantics ^ ( values.find( value ) != values.end() );
         }
-        inline int index( val_t v1, val_t v2 )
-        {
-            assert( arity == 2 );
-            int idx = v1 * domains[0]->size() + v2;
-            return idx;
-        }
-        inline int index( val_t v1, val_t v2, val_t v3 )
-        {
-            assert( arity == 3 );
-            int idx = v1 * ( domains[0]->size() + domains[1]->size() ) +
-                v2 * ( domains[1]->size() ) +
-                v3;
-            return idx;
-        }
-
-        int vindex( int n, int offset, va_list lst );
-        int index( int n, val_t v1, val_t v2, val_t v3, ... );
-
-        inline bool check( val_t v1 )
-        {
-            return valid[ index( v1 ) ];
-        }
-        inline bool check( val_t v1, val_t v2 )
-        {
-            return valid[ index( v1, v2 ) ];
-        }
-        inline bool check( val_t v1, val_t v2, val_t v3 )
-        {
-            return valid[ index( v1, v2, v3 ) ];
-        }
-        bool check( int n, val_t v1, val_t v2, val_t v3, ... );
+        bool test( int n, int v1, ... );
     };
+
+    struct Constraint
+    {
+        enum Type
+        {
+            EXTENSION,
+            INTENSION,
+            GLOBAL
+        };
+
+        int arity;
+        Type type;
+        vector<int> scope;
+        Relation* rel;
+
+        Constraint( int arity, Type type, vector<int> scope, Relation* rel )
+            : arity( arity ), type( type ), scope( scope ), rel( rel )
+        {
+        }
+    };
+
 
     /**
      * Constraint Satisfaction Problem
@@ -77,9 +71,11 @@ namespace Helvetica
      */
     struct CSP
     {
-        int V; // Number of variables
+        vector<int> variables; // Domain_indices of variables
         vector<Domain> domains; // Domains
-        vector<Relation> relations; // Relations
+        vector<Constraint> constraints; // Constraints
+
+        vector<Relation> relations; // Relations (Extensive)
 
         /**
          * Parse a XML-CSP problem

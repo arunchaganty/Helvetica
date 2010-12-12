@@ -22,7 +22,7 @@ namespace Helvetica
     CSPSolution::CSPSolution( CSP& problem, CSPSolver& solver ) :
         problem( &problem ), solver( &solver )
     {
-        for( int i = 0; i < problem.V; i++ )
+        for( unsigned int i = 0; i < problem.variables.size(); i++ )
         {
             assn.push_back( UNSET );
         }
@@ -43,7 +43,7 @@ namespace Helvetica
      */
     bool CSPSolution::isSolved()
     {
-        for( int i = 0; i < problem->V; i++ )
+        for( unsigned int i = 0; i < problem->variables.size(); i++ )
         {
             if( assn[i] == UNSET ) return false;
         }
