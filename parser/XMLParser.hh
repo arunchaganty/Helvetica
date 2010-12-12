@@ -2280,7 +2280,7 @@ namespace CSPXMLParser
 
     void clearOperandStack()
     {
-      for(int i=0;i<operandStack.size();++i)
+      for(unsigned int i=0;i<operandStack.size();++i)
 	delete operandStack[i];
 
       operandStack.clear();
