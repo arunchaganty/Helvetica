@@ -1196,7 +1196,7 @@ namespace CSPXMLParser
 
 	  const vector<string> &keyOrder=*conventionalKeyOrder;
 
-	  int i;
+	  unsigned int i;
 	  for(i=0;i<stack.size()-base && i<keyOrder.size();++i)
 	  {
 	    if (stack[base+i]->getType()!=SYMB_NIL)
@@ -1572,7 +1572,7 @@ namespace CSPXMLParser
 	if (reference.length()>7 && reference.substr(0,7)=="global:")
 	{
 	  // global constraints are case insensitive
-	  for(int i=0;i<reference.size();++i)
+	  for(unsigned int i=0;i<reference.size();++i)
 	    reference[i]=tolower(reference[i]);
 	}
 
@@ -1655,7 +1655,7 @@ namespace CSPXMLParser
     private:
       ASTList scopeList;
       VariableInfo scopeInfo;
-      int initialOperandStackSize;
+      unsigned int initialOperandStackSize;
     };
 
     class ExtensionTagAction : public TagAction

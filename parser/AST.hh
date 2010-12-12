@@ -620,7 +620,7 @@ namespace CSPXMLParser
       node->type=LIST;
       node->size=list.size();
 
-      for(int i=0;i<list.size();++i)
+      for(unsigned int i=0;i<list.size();++i)
 	node->items[i]=list[i]->makeCTree();
 
       return reinterpret_cast<C_AST *>(node);
