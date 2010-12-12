@@ -11,6 +11,8 @@
 #include <cstdio>
 #include <string>
 
+#include "CSP.h"
+#include "CSPSolver.h"
 #include "Helvetica.h"
 
 using namespace std;
@@ -68,6 +70,12 @@ int main( int argc, char* argv[] )
             fprintf( stderr, "Error loading file: %s\n", filename.c_str() );
             exit( EXIT_FAILURE );
         }
+        CSP problem = CSP::parse( filename );
+        // TODO: Make a solver specific options file
+        CSPSolver solver = CSPSolver::create( CSPSolver::Settings( ) );
+
+        CSPSolution& sol = solver.solve( problem );
+        // Print solution
     }
 
 

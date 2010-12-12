@@ -16,7 +16,7 @@ CFLAGS +=
 LDFLAGS += 
 
 LIB_OBJS=
-BIN_OBJS=obj/main.o
+BIN_OBJS=obj/main.o obj/CSP.o obj/CSPSolver.o
 OBJS=$(LIB_OBJS) $(BIN_OBJS)
 
 all: $(TARGETS)
