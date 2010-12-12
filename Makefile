@@ -17,7 +17,7 @@ LDFLAGS +=  `pkg-config --libs libxml-2.0`
 
 LIB_OBJS=
 BIN_OBJS=obj/main.o obj/CSP.o obj/CSPSolver.o obj/Log.o
-GLOBAL_HEADERS=include/tuple.h
+GLOBAL_HEADERS=
 OBJS=$(LIB_OBJS) $(BIN_OBJS)
 
 all: $(TARGETS)

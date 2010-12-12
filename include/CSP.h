@@ -13,7 +13,6 @@
 #include <string>
 #include <cassert>
 #include <cstdarg>
-#include "tuple.h"
 using namespace std;
 
 namespace Helvetica 
@@ -33,10 +32,10 @@ namespace Helvetica
         int arity;
         vector<Domain*> domains;
         Semantics semantics;
-        set< tuple<int> > values;
+        set< vector<int> > values;
 
         Relation( int arity, Semantics semantics );
-        inline bool test( tuple<int> value )
+        inline bool test( vector<int> value )
         {
             return semantics ^ ( values.find( value ) != values.end() );
         }

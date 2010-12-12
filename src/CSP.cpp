@@ -30,7 +30,7 @@ namespace Helvetica
 
     bool Relation::test( int n, int v1, ... )
     {
-        tuple<int> value( n );
+        vector<int> value( n, UNSET );
         va_list lst;
 
         va_start( lst, v1 );
@@ -127,7 +127,9 @@ namespace Helvetica
             }
             virtual void addRelationTuple(int arity, int values[]) 
             {      
-                problem.relations[ relation_idx ].values.insert( tuple<int>( arity, values ) );
+                vector<int> v( arity, UNSET );
+                for( int i = 0; i < arity; i++ ) v[ i ] = values[ i ];
+                problem.relations[ relation_idx ].values.insert( v );
             }
             virtual void addRelationTuple(int arity, int values[], int cost) 
             {      
