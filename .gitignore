@@ -1,4 +1,18 @@
+# Intermediate output
+bin/*
+obj/*
+*.o
+doc/html/*
+
+# Editor Tempfiles
 *.swp
-bin/
-obj/
-lib/
+*.swo
+*~
+
+# Others
+tags
+cscope.out
+
+# Compiled binaries
+tests/*[^.cpp]
+
