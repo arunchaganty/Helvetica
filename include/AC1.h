@@ -28,6 +28,14 @@ namespace Helvetica
          * @arg val - the new value
          */
         virtual void save( CSPSolution& sol, Assignment assn );
+
+        /**
+         * Update the last backtrack point's disabled list to include
+         * information for the assignment
+         * @arg assn - the assignment to be
+         */
+        virtual void updateDisabled( Assignment assn );
+
         /**
          * Recover a variable assignment 
          *
@@ -63,7 +71,7 @@ namespace Helvetica
          * @returns - (var_idx, val) 
          *            Should be UNSET if no suitable variable exists
          */
-        void revise( CSPSolution& sol, Assignment assn );
+        void revise( CSPSolution& sol, Assignment& assn );
         virtual CSP& preprocess( CSP& problem );
         vector<bv_t>& getLastDisabled(); 
 

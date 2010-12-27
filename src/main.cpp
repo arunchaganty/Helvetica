@@ -186,7 +186,8 @@ int main( int argc, char* argv[] )
         CSPSolution& sol = solver.solve( problem );
         // Print solution
         cout << "Answer: " << sol << endl;
-        print_stats( cout, g_Stats ) << endl;
+        g_Log->info( "Backtracks: %d Total Time: %ems (%ems)", 
+                g_Stats.backtracks, g_Stats.run_time.getTicks(), (g_Stats.avg_vs_time.getTicks() / (float) g_Stats.vs_count ) );
     }
     else
     {

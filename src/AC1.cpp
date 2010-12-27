@@ -30,6 +30,15 @@ namespace Helvetica
         // Save the value
         memory.push( make_pair( assn, disabled ) );
     }
+    void AC1Backtracker::updateDisabled( Assignment assn )
+    {
+        if( memory.size() > 0 )
+        {
+            pair< Assignment,vector<bv_t> >mem = memory.top(); memory.pop();
+            mem.second[ assn.first ][ assn.second ] = true;
+            memory.push( mem );
+        }
+    }
 
     CSPSolution& AC1Backtracker::backtrack( CSPSolution& sol )
     {
@@ -60,11 +69,19 @@ namespace Helvetica
 
     Assignment AC1ValueSelector::select( CSPSolution& sol )
     {
-        Assignment assn = ValueSelector::select( sol );
-        if( assn.second != UNSET )
+        Assignment assn = make_pair( UNSET, UNSET );
+
+        while( true )
         {
-            AC1Preprocessor& pp = dynamic_cast< AC1Preprocessor& >( sol.solver->getPreprocessor() );
-            pp.revise( sol, assn );
+            assn = ValueSelector::select( sol );
+            if( assn.second != UNSET )
+            {
+                AC1Preprocessor& pp = dynamic_cast< AC1Preprocessor& >( sol.solver->getPreprocessor() );
+                pp.revise( sol, assn );
+                // assn could be set to UNSET
+                if( assn.second != UNSET ) break;
+            }
+            else break;
         }
 
         return assn;
@@ -92,7 +109,7 @@ namespace Helvetica
         sol.assn[ unset_idx ] = UNSET;
     }
 
-    void AC1Preprocessor::revise( CSPSolution& sol, Assignment assn )
+    void AC1Preprocessor::revise( CSPSolution& sol, Assignment& assn )
     {
         // Reset last_disabled
         last_disabled.resize( sol.allowable.size() );
@@ -110,6 +127,37 @@ namespace Helvetica
         {
             Constraint& cnstr = *it;
             revise( sol, cnstr, last_disabled  );
+        }
+
+        // Check if any domains have become empty
+        bool invalid = false;
+        for( unsigned int i = 0; i < sol.allowable.size() && !invalid; i++ )
+        {
+            if( sol.assn[ i ] != UNSET ) continue;
+            bool has_any = false;
+            for( unsigned int j = 0; j < sol.allowable[i].size() && !has_any; j++ )
+            {
+                has_any |= sol.allowable[ i ][ j ];
+            }
+
+            invalid |= (!has_any);
+        }
+        if( invalid )
+        {
+            // Store this update in the previous backtrack-point
+            AC1Backtracker& bt = dynamic_cast< AC1Backtracker& >( sol.solver->getBacktracker() );
+            bt.updateDisabled( assn );
+            sol.allowable[ assn.first ][ assn.second ] = false;
+
+            assn.second = UNSET;
+            // Re-enable crossed-off options
+            for( unsigned int i = 0; i < last_disabled.size(); i++ )
+            {
+                for( unsigned int j = 0; j < last_disabled[ i ].size(); j++ )
+                {
+                    sol.allowable[ i ][ j ] = sol.allowable[ i ][ j ] | last_disabled[ i ][ j ];
+                }
+            }
         }
 
         sol.assn[ assn.first ] = UNSET;
