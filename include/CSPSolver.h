@@ -78,6 +78,19 @@ namespace Helvetica
         virtual Assignment select( CSPSolution& sol );
     };
 
+    class Preprocessor
+    {
+    public:
+        /**
+         * Select a value 
+         *
+         * @arg sol - solution to update
+         * @returns - (var_idx, val) 
+         *            Should be UNSET if no suitable variable exists
+         */
+        virtual CSP& preprocess( CSP& problem ) { return problem; }
+    };
+
     class CSPSolver
     {
     public:
@@ -91,15 +104,20 @@ namespace Helvetica
             {
                 VS_NONE,
             };
+            enum PreprocessorOptions
+            {
+                PP_NONE,
+            };
 
             BacktrackerOptions Backtracker;
             ValueSelectorOptions ValueSelector;
+            PreprocessorOptions Preprocessor;
 
-            Settings( BacktrackerOptions bt_option = BT_NONE, ValueSelectorOptions vs_option = VS_NONE )
-                : Backtracker( bt_option ), ValueSelector( vs_option ) {}
+            Settings( BacktrackerOptions bt_option = BT_NONE, ValueSelectorOptions vs_option = VS_NONE, PreprocessorOptions pp_option = PP_NONE )
+                : Backtracker( bt_option ), ValueSelector( vs_option ), Preprocessor( pp_option ) {}
         };
 
-        CSPSolver( Backtracker& backtracker, ValueSelector& valueSelector );
+        CSPSolver( Backtracker& backtracker, ValueSelector& valueSelector, Preprocessor& preprocessor );
         virtual ~CSPSolver( );
         CSPSolution& solve( CSP& problem );
 
@@ -108,6 +126,7 @@ namespace Helvetica
     protected:
         Backtracker& backtracker;
         ValueSelector& valueSelector;
+        Preprocessor& preprocessor;
     };
 
 };

@@ -133,8 +133,8 @@ namespace Helvetica
     }
 
     // CSPSolver
-    CSPSolver::CSPSolver( Backtracker& backtracker, ValueSelector& valueSelector )
-        : backtracker( backtracker ), valueSelector( valueSelector )
+    CSPSolver::CSPSolver( Backtracker& backtracker, ValueSelector& valueSelector, Preprocessor& preprocessor )
+        : backtracker( backtracker ), valueSelector( valueSelector ), preprocessor( preprocessor )
     {
     }
 
@@ -148,6 +148,7 @@ namespace Helvetica
     {
         Backtracker* bt = NULL;
         ValueSelector* vs = NULL;
+        Preprocessor* pp = NULL;
 
         switch( settings.Backtracker )
         {
@@ -155,7 +156,7 @@ namespace Helvetica
                 bt = new Backtracker();
                 break;
             default:
-                throw runtime_error( "Backtracker does not exist" );
+                throw runtime_error( "Invalid option" );
         }
 
         switch( settings.ValueSelector )
@@ -164,17 +165,27 @@ namespace Helvetica
                 vs = new ValueSelector();
                 break;
             default:
-                throw runtime_error( "Backtracker does not exist" ); 
+                throw runtime_error( "Invalid option" );
         }
 
-        CSPSolver* solver = new CSPSolver( *bt, *vs );
+        switch( settings.Preprocessor )
+        {
+            case Settings::PP_NONE: 
+                pp = new Preprocessor();
+                break;
+            default:
+                throw runtime_error( "Invalid option" );
+        }
+
+        CSPSolver* solver = new CSPSolver( *bt, *vs, *pp );
 
         return *solver;
     }
 
     CSPSolution& CSPSolver::solve( CSP& problem )
     {
-        CSPSolution* sol_ = new CSPSolution( problem, *this );
+        CSP& problem_ = preprocessor.preprocess( problem );
+        CSPSolution* sol_ = new CSPSolution( problem_, *this );
         CSPSolution& sol = *sol_;
 
         while( !sol.isSolved() )
