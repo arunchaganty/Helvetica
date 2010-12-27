@@ -27,6 +27,7 @@ Log* g_Log;
 extern int optind, opterr;
 
 Options g_Options;
+Stats g_Stats;
 
 struct Settings
 {
@@ -132,6 +133,15 @@ bool is_file( string fname )
     return ( stat( fname.c_str(), &st ) == 0 && S_ISREG( st.st_mode ) );
 }
 
+ostream& print_stats( ostream& st, const Stats stats )
+{
+    st << "Backtracks: " << stats.backtracks;
+    st << " Total Time: " << stats.run_time.getTicks() << "ms";
+    st << " (" << (stats.avg_vs_time.getTicks() / (float) stats.vs_count ) << "ms)";
+
+    return st;
+}
+
 int main( int argc, char* argv[] )
 {
     int opt;
@@ -176,6 +186,7 @@ int main( int argc, char* argv[] )
         CSPSolution& sol = solver.solve( problem );
         // Print solution
         cout << "Answer: " << sol << endl;
+        print_stats( cout, g_Stats ) << endl;
     }
     else
     {

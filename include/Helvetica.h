@@ -8,7 +8,9 @@
 #ifndef HELVETICA_H
 #define HELVETICA_H
 
+#include <sys/time.h>
 #include "Log.h"
+#include "Timer.h"
 
 namespace Helvetica 
 {
@@ -36,6 +38,18 @@ namespace Helvetica
             plan = NONE;
             isVerbose = false;
         }
+    };
+
+    struct Stats
+    {
+        int backtracks;
+
+        // Timing value selection
+        Timer avg_vs_time;
+        int vs_count;
+
+        // Timing the entire process
+        Timer run_time;
     };
 };
 

@@ -18,6 +18,8 @@
 
 using namespace std;
 
+extern Helvetica::Stats g_Stats;
+
 namespace Helvetica
 {
     CSPSolution::CSPSolution( CSP& problem, CSPSolver& solver ) :
@@ -169,12 +171,23 @@ namespace Helvetica
         CSPSolution* sol_ = new CSPSolution( problem_, *this );
         CSPSolution& sol = *sol_;
 
+        g_Stats.backtracks = 0;
+        g_Stats.vs_count = 0;
+        g_Stats.run_time.start();
+        g_Stats.avg_vs_time.start();
+        g_Stats.avg_vs_time.pause();
+
         while( !sol.isSolved() )
         {
             // Select a value, 
+            g_Stats.avg_vs_time.unpause();
             Assignment assn = valueSelector.select( sol );
+            g_Stats.avg_vs_time.pause();
+            g_Stats.vs_count ++;
+
             if( assn.second == UNSET )
             {
+                g_Stats.backtracks++;
                 sol = backtracker.backtrack( sol );
             }
             else
@@ -183,6 +196,7 @@ namespace Helvetica
                 backtracker.save( sol, assn );
             }
         }
+        g_Stats.run_time.pause();
 
         return sol;
     }
