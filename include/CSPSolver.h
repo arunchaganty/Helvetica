@@ -88,7 +88,7 @@ namespace Helvetica
          * @returns - (var_idx, val) 
          *            Should be UNSET if no suitable variable exists
          */
-        virtual CSP& preprocess( CSP& problem ) { return problem; }
+        virtual CSP& preprocess( CSP& problem );
     };
 
     class CSPSolver
@@ -122,6 +122,11 @@ namespace Helvetica
         CSPSolution& solve( CSP& problem );
 
         static CSPSolver& create( Settings settings );
+
+        Backtracker& getBacktracker();
+        ValueSelector& getValueSelector();
+        Preprocessor& getPreprocessor();
+
 
     protected:
         Backtracker& backtracker;

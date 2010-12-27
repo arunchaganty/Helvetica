@@ -132,6 +132,11 @@ namespace Helvetica
         return Assignment( i, j );
     }
 
+    CSP& Preprocessor::preprocess( CSP& problem )
+    {
+        return problem;
+    }
+
     // CSPSolver
     CSPSolver::CSPSolver( Backtracker& backtracker, ValueSelector& valueSelector, Preprocessor& preprocessor )
         : backtracker( backtracker ), valueSelector( valueSelector ), preprocessor( preprocessor )
@@ -180,6 +185,19 @@ namespace Helvetica
         CSPSolver* solver = new CSPSolver( *bt, *vs, *pp );
 
         return *solver;
+    }
+
+    Backtracker& CSPSolver::getBacktracker()
+    {
+        return backtracker;
+    }
+    ValueSelector& CSPSolver::getValueSelector()
+    {
+        return valueSelector;
+    }
+    Preprocessor& CSPSolver::getPreprocessor()
+    {
+        return preprocessor;
     }
 
     CSPSolution& CSPSolver::solve( CSP& problem )
