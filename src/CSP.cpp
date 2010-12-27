@@ -71,15 +71,15 @@ namespace Helvetica
             }
             virtual void addDomainValue(int v) 
             {
-                if( (unsigned int) v > problem.domains[ domain_idx ].size() )
+                if( (unsigned int) v >= problem.domains[ domain_idx ].size() )
                     problem.domains[ domain_idx ].resize( v+1, false );
                 problem.domains[ domain_idx ][ v ] = true;
             }
             virtual void addDomainValue(int first,int last) 
             {
-                if( (unsigned int) last > problem.domains[ domain_idx ].size() )
+                if( (unsigned int) last >= problem.domains[ domain_idx ].size() )
                     problem.domains[ domain_idx ].resize( last+1, false );
-                for( int v = first; v < last; v++ ) 
+                for( int v = first; v <= last; v++ ) 
                     problem.domains[ domain_idx ][ v ] = true;
             }
             virtual void endDomain() 
