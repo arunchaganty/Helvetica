@@ -30,7 +30,11 @@ bin/helvetica: ${OBJS}
 	$(CC) $(LDFLAGS) $^ -o $@
 
 # Pattern to build obj files from src files
-${OBJS}: obj/%.o : src/%.cpp ${GLOBAL_HEADERS}
+${LIB_OBJS}: obj/%.o : src/%.cpp include/%.h ${GLOBAL_HEADERS}
+	if [ ! -e obj ]; then mkdir obj; fi;
+	$(CC) $(CFLAGS) -c $< -o $@
+
+${BIN_OBJS}: obj/%.o : src/%.cpp ${GLOBAL_HEADERS}
 	if [ ! -e obj ]; then mkdir obj; fi;
 	$(CC) $(CFLAGS) -c $< -o $@
 
