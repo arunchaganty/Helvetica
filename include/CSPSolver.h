@@ -9,13 +9,17 @@
 #define CSPSOLVER_H
 
 #include <vector>
+#include <stack>
 #include <cassert>
+#include "CSP.h"
 using namespace std;
 
 namespace Helvetica 
 {
     // Forward declaration
     class CSPSolver;
+
+    typedef pair< int, int > Assignment;
 
     /**
      * Class to track intermediate state of the solution
@@ -24,18 +28,24 @@ namespace Helvetica
     {
         CSP* problem;
         CSPSolver* solver;
+        vector<bv_t> allowable; // Intermediate variable assignments 
         vector<int> assn; // Intermediate variable assignments 
 
         CSPSolution( CSP& problem, CSPSolver& solver);
         CSPSolution( CSP& problem, CSPSolver& solver, vector<int> assn );
         CSPSolution( CSPSolution& solution, vector<int> assn );
 
+        void apply( Assignment& assn );
         bool isSolved();
+
     };
+
+    ostream& operator<<( ostream& st, const CSPSolution& sol );
 
     class Backtracker
     {
     public:
+        Backtracker();
         /**
          * Save a variable assignment 
          *
@@ -43,13 +53,16 @@ namespace Helvetica
          * @arg var_idx - the variable index just modified
          * @arg val - the new value
          */
-        virtual void save( CSPSolution& sol, int var_idx, val_t val ) = 0;
+        virtual void save( CSPSolution& sol, Assignment assn );
         /**
          * Recover a variable assignment 
          *
          * @arg sol - the solution to revert
          */
-        virtual CSPSolution& backtrack( CSPSolution& sol ) = 0;
+        virtual CSPSolution& backtrack( CSPSolution& sol );
+
+    private:
+        stack<Assignment> memory;
     };
 
     class ValueSelector
@@ -59,12 +72,10 @@ namespace Helvetica
          * Select a value 
          *
          * @arg sol - solution to update
-         * @arg var_idx - Variable index that needs updating. 
-         *                Should be UNSET if no suitable variable exists
-         * @returns - value to be assigned to var_idx.
+         * @returns - (var_idx, val) 
          *            Should be UNSET if no suitable variable exists
          */
-        virtual val_t select( CSPSolution& sol, int& var_idx ) = 0;
+        virtual Assignment select( CSPSolution& sol );
     };
 
     class CSPSolver
@@ -89,6 +100,7 @@ namespace Helvetica
         };
 
         CSPSolver( Backtracker& backtracker, ValueSelector& valueSelector );
+        virtual ~CSPSolver( );
         CSPSolution& solve( CSP& problem );
 
         static CSPSolver& create( Settings settings );

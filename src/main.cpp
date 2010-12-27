@@ -75,10 +75,11 @@ int main( int argc, char* argv[] )
         }
         CSP problem = CSP::parse( filename );
         // TODO: Make a solver specific options file
-        //CSPSolver solver = CSPSolver::create( CSPSolver::Settings( ) );
+        CSPSolver solver = CSPSolver::create( CSPSolver::Settings( ) );
 
-        //CSPSolution& sol = solver.solve( problem );
+        CSPSolution& sol = solver.solve( problem );
         // Print solution
+        cout << "Answer: " << sol << endl;
     }
     else
     {

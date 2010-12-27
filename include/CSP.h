@@ -15,6 +15,8 @@
 #include <cstdarg>
 using namespace std;
 
+#include "Helvetica.h"
+
 namespace Helvetica 
 {
     typedef vector<bool> bv_t; // Bit vector
@@ -35,7 +37,7 @@ namespace Helvetica
         set< vector<int> > values;
 
         Relation( int arity, Semantics semantics );
-        inline bool test( vector<int> value )
+        inline bool test( vector<int>& value )
         {
             return semantics ^ ( values.find( value ) != values.end() );
         }
@@ -60,8 +62,24 @@ namespace Helvetica
             : arity( arity ), type( type ), scope( scope ), rel( rel )
         {
         }
-    };
+        inline bool applicable( vector< int >& assn )
+        {
+            bool ret = true;
+            for( int i = 0; i < arity && ret; i++ ) 
+                ret &= ( assn[ scope[ i ] ] != UNSET );
 
+            return ret;
+        }
+
+        inline bool test( vector< int >& assn )
+        {
+            // Select indices from assn using scope
+            vector<int> v;
+            for( int i = 0; i < arity; i++ ) v.push_back( assn[ scope[i] ] );
+
+            return rel->test( v );
+        }
+    };
 
     /**
      * Constraint Satisfaction Problem
