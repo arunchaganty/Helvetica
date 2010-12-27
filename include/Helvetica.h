@@ -14,22 +14,27 @@ namespace Helvetica
 {
     const int UNSET = -1;
 
-    enum Mode
-    {
-        NORMAL=0,
-    };
-
     struct Options
     {
+        enum Mode
+        {
+            NORMAL=0,
+        };
+        enum Plan 
+        {
+            NONE,
+        };
+
         Mode mode;
+        Plan plan;
         bool isVerbose;
 
         Options()
         {
             mode = NORMAL;
+            plan = NONE;
             isVerbose = false;
         }
-
     };
 };
 

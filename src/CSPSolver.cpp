@@ -147,44 +147,7 @@ namespace Helvetica
     {
         delete &backtracker;
         delete &valueSelector;
-    }
-
-    CSPSolver& CSPSolver::create( Settings settings )
-    {
-        Backtracker* bt = NULL;
-        ValueSelector* vs = NULL;
-        Preprocessor* pp = NULL;
-
-        switch( settings.Backtracker )
-        {
-            case Settings::BT_NONE: 
-                bt = new Backtracker();
-                break;
-            default:
-                throw runtime_error( "Invalid option" );
-        }
-
-        switch( settings.ValueSelector )
-        {
-            case Settings::VS_NONE: 
-                vs = new ValueSelector();
-                break;
-            default:
-                throw runtime_error( "Invalid option" );
-        }
-
-        switch( settings.Preprocessor )
-        {
-            case Settings::PP_NONE: 
-                pp = new Preprocessor();
-                break;
-            default:
-                throw runtime_error( "Invalid option" );
-        }
-
-        CSPSolver* solver = new CSPSolver( *bt, *vs, *pp );
-
-        return *solver;
+        delete &preprocessor;
     }
 
     Backtracker& CSPSolver::getBacktracker()

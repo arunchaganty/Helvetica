@@ -94,34 +94,9 @@ namespace Helvetica
     class CSPSolver
     {
     public:
-        struct Settings
-        {
-            enum BacktrackerOptions
-            {
-                BT_NONE,
-            };
-            enum ValueSelectorOptions
-            {
-                VS_NONE,
-            };
-            enum PreprocessorOptions
-            {
-                PP_NONE,
-            };
-
-            BacktrackerOptions Backtracker;
-            ValueSelectorOptions ValueSelector;
-            PreprocessorOptions Preprocessor;
-
-            Settings( BacktrackerOptions bt_option = BT_NONE, ValueSelectorOptions vs_option = VS_NONE, PreprocessorOptions pp_option = PP_NONE )
-                : Backtracker( bt_option ), ValueSelector( vs_option ), Preprocessor( pp_option ) {}
-        };
-
         CSPSolver( Backtracker& backtracker, ValueSelector& valueSelector, Preprocessor& preprocessor );
         virtual ~CSPSolver( );
         CSPSolution& solve( CSP& problem );
-
-        static CSPSolver& create( Settings settings );
 
         Backtracker& getBacktracker();
         ValueSelector& getValueSelector();
