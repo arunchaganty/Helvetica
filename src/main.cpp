@@ -16,6 +16,7 @@
 
 #include "CSP.h"
 #include "CSPSolver.h"
+#include "AC1.h"
 #include "Helvetica.h"
 
 using namespace std;
@@ -32,14 +33,17 @@ struct Settings
     enum BacktrackerOptions
     {
         BT_NONE,
+        BT_AC1,
     };
     enum ValueSelectorOptions
     {
         VS_NONE,
+        VS_AC1,
     };
     enum PreprocessorOptions
     {
         PP_NONE,
+        PP_AC1,
     };
 
     BacktrackerOptions Backtracker;
@@ -52,6 +56,8 @@ struct Settings
     {
         switch( plan )
         {
+            case( Options::AC1 ):
+                return Settings( BT_AC1, VS_AC1, PP_AC1 );
             case( Options::NONE ):
             default:
                 return Settings( BT_NONE, VS_NONE, PP_NONE );
@@ -70,6 +76,9 @@ CSPSolver& create( Settings settings )
         case Settings::BT_NONE: 
             bt = new Backtracker();
             break;
+        case Settings::BT_AC1: 
+            bt = new AC1Backtracker();
+            break;
         default:
             throw runtime_error( "Invalid option" );
     }
@@ -78,6 +87,9 @@ CSPSolver& create( Settings settings )
     {
         case Settings::VS_NONE: 
             vs = new ValueSelector();
+            break;
+        case Settings::VS_AC1: 
+            vs = new AC1ValueSelector();
             break;
         default:
             throw runtime_error( "Invalid option" );
@@ -88,6 +100,9 @@ CSPSolver& create( Settings settings )
         case Settings::PP_NONE: 
             pp = new Preprocessor();
             break;
+        case Settings::PP_AC1: 
+            pp = new AC1Preprocessor();
+            break;
         default:
             throw runtime_error( "Invalid option" );
     }
@@ -97,12 +112,17 @@ CSPSolver& create( Settings settings )
     return *solver;
 }
 
+static struct option options[] = {
+    { "ac1", no_argument, NULL, Options::AC1 },
+};
+
 void print_help( FILE* file, char* argv[] )
 {
     fprintf( file, "Usage: %s [options] <csp-file>\n", argv[ 0 ] );
     fprintf( file, "Options:\n" );
     fprintf( file, "\t-h \t--\t Print this message\n" );
     fprintf( file, "\t-v \t--\t Verbose\n" );
+    fprintf( file, "\t--ac1 \t--\t Consistency - AC1\n" );
 }
 
 bool is_file( string fname )
@@ -117,9 +137,10 @@ int main( int argc, char* argv[] )
     int opt;
 
     g_Log = &Log::create( cerr, Log::DEBUG );
+    int long_idx;
 
     // Parse command line options 
-    while( ( opt = getopt( argc, argv, "vh" ) ) != -1 )
+    while( ( opt = getopt_long( argc, argv, "vh", options, &long_idx ) ) != -1 )
     {
         switch( opt ) 
         {
@@ -129,6 +150,9 @@ int main( int argc, char* argv[] )
             case 'h':
                 print_help( stdout, argv );
                 exit( EXIT_SUCCESS );
+                break;
+            case Options::AC1:
+                g_Options.plan = Options::AC1;
                 break;
             default: /* '?' */
                 print_help( stderr, argv );

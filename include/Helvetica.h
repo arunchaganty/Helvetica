@@ -23,6 +23,7 @@ namespace Helvetica
         enum Plan 
         {
             NONE,
+            AC1
         };
 
         Mode mode;

@@ -1,0 +1,129 @@
+/**
+* @file AC1.cpp
+* @author Arun Tejasvi Chaganty <arunchaganty@gmail.com>
+* @date 2010-05-08
+* Helvetica - CSP Workbench
+* AC1 implementation
+*/
+
+#include <cstdlib>
+#include <cassert>
+#include <stdexcept>
+#include <typeinfo>
+#include <string>
+
+#include "Helvetica.h"
+#include "CSP.h"
+#include "CSPSolver.h"
+#include "AC1.h"
+
+using namespace std;
+
+namespace Helvetica
+{
+    // Components
+    void AC1Backtracker::save( CSPSolution& sol, Assignment assn )
+    {
+        // Get the disabled bits from the preprocessor
+        AC1Preprocessor& pp = dynamic_cast< AC1Preprocessor& >( sol.solver->getPreprocessor() );
+        vector<bv_t> disabled = vector<bv_t>( pp.getLastDisabled() );
+        // Save the value
+        memory.push( make_pair( assn, disabled ) );
+    }
+
+    CSPSolution& AC1Backtracker::backtrack( CSPSolution& sol )
+    {
+        if( memory.size() == 0 )
+            throw runtime_error( "Unsolvable" ); 
+
+        pair< Assignment,vector<bv_t> >mem = memory.top(); memory.pop();
+        Assignment assn = mem.first;
+        vector<bv_t> disabled = mem.second;
+
+        // Re-enable crossed-off options
+        for( unsigned int i = 0; i < disabled.size(); i++ )
+        {
+            for( unsigned int j = 0; j < disabled[ i ].size(); j++ )
+            {
+                sol.allowable[ i ][ j ] = sol.allowable[ i ][ j ] | disabled[ i ][ j ];
+            }
+        }
+        
+        int i = assn.first;
+        int v = assn.second;
+        // Cross off the domain option
+        sol.allowable[ i ][ v ] = false;
+        sol.assn[ i ] = UNSET;
+
+        return sol;
+    }
+
+    Assignment AC1ValueSelector::select( CSPSolution& sol )
+    {
+        Assignment assn = ValueSelector::select( sol );
+        if( assn.second != UNSET )
+        {
+            AC1Preprocessor& pp = dynamic_cast< AC1Preprocessor& >( sol.solver->getPreprocessor() );
+            pp.revise( sol, assn );
+        }
+
+        return assn;
+    }
+
+    void AC1Preprocessor::revise( CSPSolution& sol, Constraint& cnstr, vector<bv_t>& disabled  )
+    {
+        int idx0 = cnstr.scope[ 0 ];
+        int idx1 = cnstr.scope[ 1 ];
+
+        if( cnstr.arity != 2 || !( (sol.assn[ idx0 ] == UNSET) ^ (sol.assn[ idx1 ] == UNSET) ) ) return;
+
+        int unset_idx = (sol.assn[ idx0 ] == UNSET) ? idx0 : idx1;
+
+        Domain& dom = sol.problem->domains[ sol.problem->variables[ unset_idx ] ];
+
+        for( unsigned int i = 0; i < dom.size(); i++ )
+        {
+            if( !sol.allowable[ unset_idx ][ i ] ) continue;
+
+            sol.assn[ unset_idx ] = i;
+            disabled[ unset_idx ][ i ] = disabled[ unset_idx ][ i ] | !cnstr.test( sol.assn );
+            sol.allowable[ unset_idx ][ i ] = sol.allowable[ unset_idx ][ i ] & cnstr.test( sol.assn );
+        }
+        sol.assn[ unset_idx ] = UNSET;
+    }
+
+    void AC1Preprocessor::revise( CSPSolution& sol, Assignment assn )
+    {
+        // Reset last_disabled
+        last_disabled.resize( sol.allowable.size() );
+        for( unsigned int i = 0; i < sol.allowable.size(); i++ )
+        {
+            last_disabled[ i ].resize( 0 );
+            last_disabled[ i ].resize( sol.allowable[ i ].size(), false );
+        }
+
+        sol.assn[ assn.first ] = assn.second;
+
+        // For every constraint that is dependent on 2 or more values
+        vector<Constraint>::iterator it;
+        for( it = sol.problem->constraints.begin(); it != sol.problem->constraints.end(); it++ )
+        {
+            Constraint& cnstr = *it;
+            revise( sol, cnstr, last_disabled  );
+        }
+
+        sol.assn[ assn.first ] = UNSET;
+    }
+
+    CSP& AC1Preprocessor::preprocess( CSP& problem )
+    {
+        return problem;
+    }
+
+    vector<bv_t>& AC1Preprocessor::getLastDisabled()
+    {
+        return last_disabled;
+    }
+
+};
+

@@ -16,7 +16,8 @@ DISTFILES=$(TARGETS) tests/ doc/ README
 CFLAGS += `pkg-config --cflags libxml-2.0`
 LDFLAGS +=  `pkg-config --libs libxml-2.0`
 
-LIB_OBJS=obj/CSP.o obj/CSPSolver.o obj/Log.o
+LIB_OBJS=obj/CSP.o obj/CSPSolver.o obj/Log.o \
+		 obj/AC1.o
 BIN_OBJS=obj/main.o
 GLOBAL_HEADERS=
 OBJS=$(LIB_OBJS) $(BIN_OBJS)
