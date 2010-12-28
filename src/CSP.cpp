@@ -53,6 +53,38 @@ namespace Helvetica
         return rel->test( v );
     }
 
+    bool GlobalConstraint::test( vector< int >& assn )
+    {
+        switch( g_type )
+        {
+            case ALL_DIFFERENT: 
+                return all_different( assn );
+            default:
+                throw runtime_error("unsupported");
+        }
+    }
+    bool GlobalConstraint::all_different( vector< int >& assn )
+    {
+        // Select indices from assn using scope
+        // Check if there are any repeated values
+        set<int> v;
+        for( int i = 0; i < arity; i++ ) 
+        {
+            int val = assn[ scope[i] ];
+            if( v.find( val ) != v.end() )
+            {
+                return false;
+            }
+            else
+            {
+                v.insert( val );
+            }
+        }
+
+        return true;
+
+    }
+
     class HelveticaParse : public CSPParserCallback
     {
         public:
@@ -210,6 +242,14 @@ namespace Helvetica
                         problem.constraints.push_back( new
                                 ExtensiveConstraint( arity, scope_, &problem.relations[id] ) );
                         break;
+                    case GlobalConstraintType:
+                        if( reference.compare( "global:alldifferent" ) == 0 )
+                        {
+                            problem.constraints.push_back( new
+                                    GlobalConstraint( arity, scope_, GlobalConstraint::ALL_DIFFERENT ) );
+                            break;
+                        }
+                        // else fall through
                     case PredicateType:
                     default:
                         throw runtime_error("unsupported");

@@ -31,5 +31,6 @@ This is the 4-queens instance represnted in extension.
 <constraint name="C3" arity="2" scope="V1 V2" reference="R0"/>
 <constraint name="C4" arity="2" scope="V1 V3" reference="R1"/>
 <constraint name="C5" arity="2" scope="V2 V3" reference="R0"/>
+<constraint name="C6" arity="4" scope="V0 V1 V2 V3" reference="global:allDifferent"/>
 </constraints>
 </instance>

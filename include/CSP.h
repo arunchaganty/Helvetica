@@ -84,6 +84,25 @@ namespace Helvetica
         virtual bool test( vector< int >& assn );
     };
 
+    struct GlobalConstraint : public Constraint
+    {
+        enum GlobalType
+        {
+            ALL_DIFFERENT,
+        };
+
+        GlobalType g_type;
+
+        GlobalConstraint( int arity,  vector<int> scope, GlobalType type )
+            : Constraint( arity, GLOBAL, scope ), g_type( g_type )
+        {
+        }
+        virtual bool test( vector< int >& assn );
+
+        protected:
+        bool all_different( vector< int >& assn );
+    };
+
     /**
      * Constraint Satisfaction Problem
      * Contains tuple <D, R>
