@@ -56,10 +56,9 @@ namespace Helvetica
         int arity;
         Type type;
         vector<int> scope;
-        Relation* rel;
 
-        Constraint( int arity, Type type, vector<int> scope, Relation* rel )
-            : arity( arity ), type( type ), scope( scope ), rel( rel )
+        Constraint( int arity, Type type, vector<int> scope )
+            : arity( arity ), type( type ), scope( scope )
         {
         }
         inline bool applicable( vector< int >& assn )
@@ -71,14 +70,18 @@ namespace Helvetica
             return ret;
         }
 
-        inline bool test( vector< int >& assn )
-        {
-            // Select indices from assn using scope
-            vector<int> v;
-            for( int i = 0; i < arity; i++ ) v.push_back( assn[ scope[i] ] );
+        virtual bool test( vector< int >& assn ) = 0;
+    };
 
-            return rel->test( v );
+    struct ExtensiveConstraint : public Constraint
+    {
+        Relation* rel;
+
+        ExtensiveConstraint( int arity,  vector<int> scope, Relation* rel )
+            : Constraint( arity, EXTENSION, scope ), rel( rel )
+        {
         }
+        virtual bool test( vector< int >& assn );
     };
 
     /**
@@ -90,7 +93,7 @@ namespace Helvetica
     {
         vector<int> variables; // Domain_indices of variables
         vector<Domain> domains; // Domains
-        vector<Constraint> constraints; // Constraints
+        vector<Constraint*> constraints; // Constraints
 
         vector<Relation> relations; // Relations (Extensive)
 

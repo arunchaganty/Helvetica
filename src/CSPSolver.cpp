@@ -114,11 +114,11 @@ namespace Helvetica
 
             // Check with constraints
             bool satisfiable = true;
-            vector<Constraint>::iterator it;
+            vector<Constraint*>::iterator it;
             for( it = sol.problem->constraints.begin(); it != sol.problem->constraints.end() && satisfiable; it++ )
             {
                 // applicable => should pass test
-                satisfiable &= ( ( !it->applicable( sol.assn ) ) || it->test( sol.assn ) );
+                satisfiable &= ( ( !(*it)->applicable( sol.assn ) ) || (*it)->test( sol.assn ) );
             }
 
             if( satisfiable ) break;

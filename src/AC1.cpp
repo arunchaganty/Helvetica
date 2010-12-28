@@ -122,10 +122,10 @@ namespace Helvetica
         sol.assn[ assn.first ] = assn.second;
 
         // For every constraint that is dependent on 2 or more values
-        vector<Constraint>::iterator it;
+        vector<Constraint*>::iterator it;
         for( it = sol.problem->constraints.begin(); it != sol.problem->constraints.end(); it++ )
         {
-            Constraint& cnstr = *it;
+            Constraint& cnstr = *(*it);
             revise( sol, cnstr, last_disabled  );
         }
 

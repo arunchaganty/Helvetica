@@ -44,6 +44,14 @@ namespace Helvetica
         return test( value );
     }
 
+    bool ExtensiveConstraint::test( vector< int >& assn )
+    {
+        // Select indices from assn using scope
+        vector<int> v;
+        for( int i = 0; i < arity; i++ ) v.push_back( assn[ scope[i] ] );
+
+        return rel->test( v );
+    }
 
     class HelveticaParse : public CSPParserCallback
     {
@@ -199,8 +207,8 @@ namespace Helvetica
                 switch( type )
                 {
                     case RelationType:
-                        problem.constraints.push_back( 
-                                Constraint( arity, Constraint::EXTENSION, scope_, &problem.relations[id] ) );
+                        problem.constraints.push_back( new
+                                ExtensiveConstraint( arity, scope_, &problem.relations[id] ) );
                         break;
                     case PredicateType:
                     default:
