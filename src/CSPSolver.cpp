@@ -92,6 +92,13 @@ namespace Helvetica
         int i = assn.first;
         int v = assn.second;
 
+        // Renable all-child options
+        for( unsigned int j = i+1; j < sol.assn.size(); j++ )
+        {
+            int d = sol.problem->variables[ j ];
+            sol.allowable[ j ] = bv_t( sol.problem->domains[ d ] );
+        }
+        
         // Cross off the domain option
         sol.allowable[ i ][ v ] = false;
         sol.assn[ i ] = UNSET;
