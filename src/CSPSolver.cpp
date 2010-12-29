@@ -18,6 +18,7 @@
 
 using namespace std;
 
+extern Log* g_Log;
 extern Helvetica::Stats g_Stats;
 
 namespace Helvetica
@@ -186,6 +187,10 @@ namespace Helvetica
 
         while( !sol.isSolved() )
         {
+            g_Stats.run_time.pause();
+            g_Log->debug( "Backtracks: %d Total Time: %ems (%ems)", 
+                    g_Stats.backtracks, g_Stats.run_time.getTicks(), (g_Stats.avg_vs_time.getTicks() / (float) g_Stats.vs_count ) );
+            g_Stats.run_time.unpause();
             // Select a value, 
             g_Stats.avg_vs_time.unpause();
             Assignment assn = valueSelector.select( sol );

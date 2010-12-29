@@ -146,7 +146,7 @@ int main( int argc, char* argv[] )
 {
     int opt;
 
-    g_Log = &Log::create( cerr, Log::DEBUG );
+    g_Log = &Log::create( cerr, Log::INFO );
     int long_idx;
 
     // Parse command line options 
@@ -156,6 +156,7 @@ int main( int argc, char* argv[] )
         {
             case 'v':
                 g_Options.isVerbose = true;
+                g_Log->setLevel( Log::DEBUG );
                 break;
             case 'h':
                 print_help( stdout, argv );

@@ -51,19 +51,54 @@ This is the squares instance represented in intension.
 <predicate name="P2">
 <parameters> int X0 int X1 int X2 int X3</parameters>
 <expression>
-<functional> eq(add(X0,X1,X2),X3) </functional>
+<functional> eq(add(add(X0,X1),X2),X3) </functional>
 </expression>
 </predicate>
 <predicate name="P3">
 <parameters> int X0 int X1 int X2 int X3 int X4</parameters>
 <expression>
-<functional> eq(add(X0,X1,X2,X3),X4) </functional>
+<functional> eq(add(add(X0,X1),add(X2,X3)),X4) </functional>
 </expression>
 </predicate>
 <predicate name="P4">
 <parameters> int X0 int X1 int X2 int X3 int X4 int X5 int X6 int X7 int X8 int X9 int X10 int X11 int X12 int X13 int X14 int X15 int X16 int X17 int X18 int X19 int X20 int X21 int X22 int X23 int X24</parameters>
 <expression>
-<functional> eq(add(mul(X0,X0),mul(X1,X1),mul(X2,x2),mul(X3,X3),mul(X4,X4),mul(X5,X5),mul(X6,X6),mul(X7,X7),mul(X8,X8),mul(X9,X9),mul(X10,X10),mul(X11,X11),mul(X12,X12),mul(X13,X13)mul(X14,X14),mul(X15,X15),mul(X16,X16),mul(X17,X17),mul(X18,X18),mul(X19,X19),mul(X20,X20),mul(X21,X21),mul(X22,X22),mul(X23,X23)),mul(X24,X24)) </functional>
+    <functional> eq(
+        add(
+            add(
+                add( 
+                    add(
+                        add(mul(X0,X0),mul(X1,X1)),
+                        add(mul(X2,X2),mul(X3,X3))
+                        ),
+                    add(
+                        add(mul(X4,X4),mul(X5,X5)),
+                        add(mul(X6,X6),mul(X7,X7))
+                        )
+                    ),
+                add(
+                    add(
+                        add(mul(X8,X8),mul(X9,X9)),
+                        add(mul(X10,X10),mul(X11,X11))
+                        ),
+                    add(
+                        add(mul(X12,X12),mul(X13,X13)),
+                        add(mul(X14,X14),mul(X15,X15))
+                        )
+                    )
+                ),
+            add(
+                add(
+                    add(mul(X16,X16),mul(X17,X17)),
+                    add(mul(X18,X18),mul(X19,X19))
+                    ),
+                add(
+                    add(mul(X20,X20),mul(X21,X21)),
+                    add(mul(X22,X22),mul(X23,X23))
+                    )
+                )
+        ),
+        mul(X24,X24)) </functional>
 </expression>
 </predicate>
 </predicates>

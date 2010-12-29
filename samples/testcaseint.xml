@@ -42,7 +42,7 @@ This is another instance represented in intention.
 <predicate name="P3">
 <parameters> int X0 int X1 int X2 int X3 </parameters>
 <expression>
-<functional> eq(add(X0,X1),abs(sub(X3,X4))) </functional>
+<functional> eq(add(X0,X1),abs(sub(X2,X3))) </functional>
 </expression>
 </predicate>
 </predicates>
