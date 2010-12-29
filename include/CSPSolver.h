@@ -21,6 +21,14 @@ namespace Helvetica
 
     typedef pair< int, int > Assignment;
 
+    inline unsigned int getAssignedCount( const vector< int >& assn )
+    {
+        unsigned int i;
+        for( i = 0; i < assn.size(); i++ )
+            if( assn[ i ] == UNSET ) break;
+        return i;
+    }
+
     /**
      * Class to track intermediate state of the solution
      */
@@ -76,6 +84,7 @@ namespace Helvetica
          *            Should be UNSET if no suitable variable exists
          */
         virtual Assignment select( CSPSolution& sol );
+        virtual bool valid( CSPSolution& sol, Assignment assn );
     };
 
     class Preprocessor

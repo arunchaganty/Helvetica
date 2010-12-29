@@ -110,26 +110,14 @@ namespace Helvetica
     Assignment ValueSelector::select( CSPSolution& sol )
     {
         // Find first unassigned index
-        unsigned int i;
-        for( i = 0; i < sol.assn.size() && sol.assn[ i ] != UNSET; i++ );
+        unsigned int i = getAssignedCount( sol.assn );
 
         // Assign first "acceptable" value
         unsigned int j;
         for( j = 0; j < sol.allowable[ i ].size(); j++ )
         {
             if ( sol.allowable[ i ][ j ] == false ) continue;
-            sol.assn[ i ] = j;
-
-            // Check with constraints
-            bool satisfiable = true;
-            vector<Constraint*>::iterator it;
-            for( it = sol.problem->constraints.begin(); it != sol.problem->constraints.end() && satisfiable; it++ )
-            {
-                // applicable => should pass test
-                satisfiable &= ( ( !(*it)->applicable( sol.assn ) ) || (*it)->test( sol.assn ) );
-            }
-
-            if( satisfiable ) break;
+            if ( valid( sol, Assignment( i, j ) ) ) break;
         }
         // Undo any possible assignments
         sol.assn[ i ] = UNSET;
@@ -140,6 +128,21 @@ namespace Helvetica
         }
 
         return Assignment( i, j );
+    }
+    bool ValueSelector::valid( CSPSolution& sol, Assignment assn )
+    {
+        bool satisfiable = true;
+        sol.assn[ assn.first ] = assn.second;
+
+        // Check with constraints
+        vector<Constraint*>::iterator it;
+        for( it = sol.problem->constraints.begin(); it != sol.problem->constraints.end() && satisfiable; it++ )
+        {
+            // applicable => should pass test
+            satisfiable &= ( ( !(*it)->applicable( sol.assn ) ) || (*it)->test( sol.assn ) );
+        }
+
+        return satisfiable;
     }
 
     CSP& Preprocessor::preprocess( CSP& problem )
