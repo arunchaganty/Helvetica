@@ -54,6 +54,7 @@ namespace Helvetica
     {
     public:
         Backtracker();
+        virtual ~Backtracker() {}
         /**
          * Save a variable assignment 
          *
@@ -76,6 +77,7 @@ namespace Helvetica
     class ValueSelector
     {
     public:
+        virtual ~ValueSelector() {}
         /**
          * Select a value 
          *
@@ -90,6 +92,7 @@ namespace Helvetica
     class Preprocessor
     {
     public:
+        virtual ~Preprocessor() {}
         /**
          * Select a value 
          *
