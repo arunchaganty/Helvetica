@@ -16,6 +16,8 @@
 using namespace std;
 
 #include "Helvetica.h"
+#include "AST.hh"
+using namespace CSPXMLParser;
 
 namespace Helvetica 
 {
@@ -44,6 +46,15 @@ namespace Helvetica
         bool test( int n, int v1, ... );
     };
 
+    struct Predicate
+    {
+        int formalParametersCount;
+        AST* expr;
+
+        bool test( vector<int>& value );
+        bool test( int n, int v1, ... );
+    };
+
     struct Constraint
     {
         enum Type
@@ -55,12 +66,19 @@ namespace Helvetica
 
         int arity;
         Type type;
+        vector<NodeType> types; // can be VAR or INT or BOOL
         vector<int> scope;
 
-        Constraint( int arity, Type type, vector<int> scope )
-            : arity( arity ), type( type ), scope( scope )
+        Constraint( int arity, Type type )
+            : arity( arity ), type( type )
         {
         }
+
+        inline void addArg( NodeType type, int val )
+        {
+            types.push_back( type ); scope.push_back( val );
+        }
+
         inline bool applicable( vector< int >& assn )
         {
             bool ret = true;
@@ -69,19 +87,42 @@ namespace Helvetica
 
             return ret;
         }
+        inline bool test( vector< int >& assn )
+        {
+            vector<int> v;
+            for( unsigned int i = 0; i < scope.size(); i++ )
+            {
+                if( types[ i ] == VAR ) v.push_back( assn[ scope[i] ] );
+                else if( types[ i ] == CST_BOOL ) v.push_back( scope[i] );
+                else if( types[ i ] == CST_INT ) v.push_back( scope[i] );
+            }
 
-        virtual bool test( vector< int >& assn ) = 0;
+            return vtest( v );
+        }
+
+        virtual bool vtest( vector< int >& value ) = 0;
     };
 
     struct ExtensiveConstraint : public Constraint
     {
         Relation* rel;
 
-        ExtensiveConstraint( int arity,  vector<int> scope, Relation* rel )
-            : Constraint( arity, EXTENSION, scope ), rel( rel )
+        ExtensiveConstraint( int arity,  Relation* rel )
+            : Constraint( arity, EXTENSION), rel( rel )
         {
         }
-        virtual bool test( vector< int >& assn );
+        virtual bool vtest( vector< int >& assn );
+    };
+
+    struct IntensiveConstraint : public Constraint
+    {
+        Predicate* pred;
+
+        IntensiveConstraint( int arity,  Predicate* pred )
+            : Constraint( arity, EXTENSION), pred( pred )
+        {
+        }
+        virtual bool vtest( vector< int >& assn );
     };
 
     struct GlobalConstraint : public Constraint
@@ -93,11 +134,11 @@ namespace Helvetica
 
         GlobalType g_type;
 
-        GlobalConstraint( int arity,  vector<int> scope, GlobalType type )
-            : Constraint( arity, GLOBAL, scope ), g_type( g_type )
+        GlobalConstraint( int arity,  GlobalType type )
+            : Constraint( arity, GLOBAL ), g_type( g_type )
         {
         }
-        virtual bool test( vector< int >& assn );
+        virtual bool vtest( vector< int >& assn );
 
         protected:
         bool all_different( vector< int >& assn );
@@ -115,6 +156,7 @@ namespace Helvetica
         vector<Constraint*> constraints; // Constraints
 
         vector<Relation> relations; // Relations (Extensive)
+        vector<Predicate> predicates; // Predicates (Intensive)
 
         /**
          * Parse a XML-CSP problem
