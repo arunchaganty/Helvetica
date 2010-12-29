@@ -45,7 +45,7 @@ namespace Helvetica
 
     private:
         // Store the assignment, and the bits disabled
-        stack<pair< Assignment, vector<bv_t> > > memory;
+        stack< vector< bv_t > > disabled_memory;
     };
 
     class AC1ValueSelector : public ValueSelector

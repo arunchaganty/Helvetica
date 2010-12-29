@@ -69,7 +69,7 @@ namespace Helvetica
          */
         virtual CSPSolution& backtrack( CSPSolution& sol );
 
-    private:
+    protected:
         stack<Assignment> memory;
     };
 

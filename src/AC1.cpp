@@ -24,19 +24,19 @@ namespace Helvetica
     // Components
     void AC1Backtracker::save( CSPSolution& sol, Assignment assn )
     {
+        Backtracker::save( sol, assn );
+
         // Get the disabled bits from the preprocessor
         AC1Preprocessor& pp = dynamic_cast< AC1Preprocessor& >( sol.solver->getPreprocessor() );
         vector<bv_t> disabled = vector<bv_t>( pp.getLastDisabled() );
-        // Save the value
-        memory.push( make_pair( assn, disabled ) );
+        disabled_memory.push( disabled );
     }
     void AC1Backtracker::updateDisabled( Assignment assn )
     {
-        if( memory.size() > 0 )
+        if( disabled_memory.size() > 0 )
         {
-            pair< Assignment,vector<bv_t> >mem = memory.top(); memory.pop();
-            mem.second[ assn.first ][ assn.second ] = true;
-            memory.push( mem );
+            vector<bv_t>& t = disabled_memory.top();
+            t[ assn.first ][ assn.second ] = true;
         }
     }
 
@@ -45,9 +45,7 @@ namespace Helvetica
         if( memory.size() == 0 )
             throw runtime_error( "Unsolvable" ); 
 
-        pair< Assignment,vector<bv_t> >mem = memory.top(); memory.pop();
-        Assignment assn = mem.first;
-        vector<bv_t> disabled = mem.second;
+        vector< bv_t > disabled = disabled_memory.top(); disabled_memory.pop();
 
         // Re-enable crossed-off options
         for( unsigned int i = 0; i < disabled.size(); i++ )
@@ -57,13 +55,10 @@ namespace Helvetica
                 sol.allowable[ i ][ j ] = sol.allowable[ i ][ j ] | disabled[ i ][ j ];
             }
         }
-        
-        int i = assn.first;
-        int v = assn.second;
-        // Cross off the domain option
+
+        Assignment assn = memory.top();
         updateDisabled( assn );
-        sol.allowable[ i ][ v ] = false;
-        sol.assn[ i ] = UNSET;
+        Backtracker::backtrack( sol );
 
         return sol;
     }
