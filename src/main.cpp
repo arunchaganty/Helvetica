@@ -16,8 +16,10 @@
 
 #include "CSP.h"
 #include "CSPSolver.h"
-#include "AC1.h"
 #include "Helvetica.h"
+
+#include "AC1.h"
+#include "Gaschnig.h"
 
 using namespace std;
 using namespace Helvetica;
@@ -35,11 +37,13 @@ struct Settings
     {
         BT_NONE,
         BT_AC1,
+        BT_GASCH,
     };
     enum ValueSelectorOptions
     {
         VS_NONE,
         VS_AC1,
+        VS_GASCH,
     };
     enum PreprocessorOptions
     {
@@ -59,6 +63,8 @@ struct Settings
         {
             case( Options::AC1 ):
                 return Settings( BT_AC1, VS_AC1, PP_AC1 );
+            case( Options::GASCH ):
+                return Settings( BT_GASCH, VS_GASCH, PP_NONE );
             case( Options::NONE ):
             default:
                 return Settings( BT_NONE, VS_NONE, PP_NONE );
@@ -80,6 +86,9 @@ CSPSolver& create( Settings settings )
         case Settings::BT_AC1: 
             bt = new AC1Backtracker();
             break;
+        case Settings::BT_GASCH: 
+            bt = new GaschnigBacktracker();
+            break;
         default:
             throw runtime_error( "Invalid option" );
     }
@@ -91,6 +100,9 @@ CSPSolver& create( Settings settings )
             break;
         case Settings::VS_AC1: 
             vs = new AC1ValueSelector();
+            break;
+        case Settings::VS_GASCH: 
+            vs = new GaschnigValueSelector();
             break;
         default:
             throw runtime_error( "Invalid option" );
@@ -115,6 +127,7 @@ CSPSolver& create( Settings settings )
 
 static struct option options[] = {
     { "ac1", no_argument, NULL, Options::AC1 },
+    { "gaschnig", no_argument, NULL, Options::GASCH },
 };
 
 void print_help( FILE* file, char* argv[] )
@@ -124,6 +137,7 @@ void print_help( FILE* file, char* argv[] )
     fprintf( file, "\t-h \t--\t Print this message\n" );
     fprintf( file, "\t-v \t--\t Verbose\n" );
     fprintf( file, "\t--ac1 \t--\t Consistency - AC1\n" );
+    fprintf( file, "\t--gaschnig \t--\t Gaschnig's Backjumping\n" );
 }
 
 bool is_file( string fname )
@@ -164,6 +178,9 @@ int main( int argc, char* argv[] )
                 break;
             case Options::AC1:
                 g_Options.plan = Options::AC1;
+                break;
+            case Options::GASCH:
+                g_Options.plan = Options::GASCH;
                 break;
             default: /* '?' */
                 print_help( stderr, argv );

@@ -25,7 +25,8 @@ namespace Helvetica
         enum Plan 
         {
             NONE,
-            AC1
+            AC1,
+            GASCH,
         };
 
         Mode mode;
