@@ -61,6 +61,7 @@ namespace Helvetica
         int i = assn.first;
         int v = assn.second;
         // Cross off the domain option
+        updateDisabled( assn );
         sol.allowable[ i ][ v ] = false;
         sol.assn[ i ] = UNSET;
 
