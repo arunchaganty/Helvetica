@@ -132,7 +132,7 @@ void print_help( FILE* file, char* argv[] )
     fprintf( file, "Options:\n" );
     fprintf( file, "\t-h \t--\t Print this message\n" );
     fprintf( file, "\t-v \t--\t Verbose\n" );
-    fprintf( file, "\t--ac1 \t--\t Consistency - AC1\n" );
+    fprintf( file, "\t--forward-check \t--\t Forward-checking\n" );
     fprintf( file, "\t--gaschnig \t--\t Gaschnig's Backjumping\n" );
 }
 
