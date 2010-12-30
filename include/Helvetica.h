@@ -25,7 +25,7 @@ namespace Helvetica
         enum Plan 
         {
             NONE,
-            AC1,
+            FWCHK,
             GASCH,
         };
 

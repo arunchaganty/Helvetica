@@ -18,7 +18,7 @@
 #include "CSPSolver.h"
 #include "Helvetica.h"
 
-#include "AC1.h"
+#include "ForwardChecking.h"
 #include "Gaschnig.h"
 
 using namespace std;
@@ -36,19 +36,18 @@ struct Settings
     enum BacktrackerOptions
     {
         BT_NONE,
-        BT_AC1,
+        BT_FWCHK,
         BT_GASCH,
     };
     enum ValueSelectorOptions
     {
         VS_NONE,
-        VS_AC1,
+        VS_FWCHK,
         VS_GASCH,
     };
     enum PreprocessorOptions
     {
         PP_NONE,
-        PP_AC1,
     };
 
     BacktrackerOptions Backtracker;
@@ -61,8 +60,8 @@ struct Settings
     {
         switch( plan )
         {
-            case( Options::AC1 ):
-                return Settings( BT_AC1, VS_AC1, PP_AC1 );
+            case( Options::FWCHK ):
+                return Settings( BT_FWCHK, VS_FWCHK, PP_NONE );
             case( Options::GASCH ):
                 return Settings( BT_GASCH, VS_GASCH, PP_NONE );
             case( Options::NONE ):
@@ -83,8 +82,8 @@ CSPSolver& create( Settings settings )
         case Settings::BT_NONE: 
             bt = new Backtracker();
             break;
-        case Settings::BT_AC1: 
-            bt = new AC1Backtracker();
+        case Settings::BT_FWCHK: 
+            bt = new ForwardCheckingBacktracker();
             break;
         case Settings::BT_GASCH: 
             bt = new GaschnigBacktracker();
@@ -98,8 +97,8 @@ CSPSolver& create( Settings settings )
         case Settings::VS_NONE: 
             vs = new ValueSelector();
             break;
-        case Settings::VS_AC1: 
-            vs = new AC1ValueSelector();
+        case Settings::VS_FWCHK: 
+            vs = new ForwardCheckingValueSelector();
             break;
         case Settings::VS_GASCH: 
             vs = new GaschnigValueSelector();
@@ -113,9 +112,6 @@ CSPSolver& create( Settings settings )
         case Settings::PP_NONE: 
             pp = new Preprocessor();
             break;
-        case Settings::PP_AC1: 
-            pp = new AC1Preprocessor();
-            break;
         default:
             throw runtime_error( "Invalid option" );
     }
@@ -126,7 +122,7 @@ CSPSolver& create( Settings settings )
 }
 
 static struct option options[] = {
-    { "ac1", no_argument, NULL, Options::AC1 },
+    { "forward-check", no_argument, NULL, Options::FWCHK },
     { "gaschnig", no_argument, NULL, Options::GASCH },
 };
 
@@ -176,8 +172,8 @@ int main( int argc, char* argv[] )
                 print_help( stdout, argv );
                 exit( EXIT_SUCCESS );
                 break;
-            case Options::AC1:
-                g_Options.plan = Options::AC1;
+            case Options::FWCHK:
+                g_Options.plan = Options::FWCHK;
                 break;
             case Options::GASCH:
                 g_Options.plan = Options::GASCH;

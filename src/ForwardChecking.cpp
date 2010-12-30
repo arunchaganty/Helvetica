@@ -1,9 +1,9 @@
 /**
-* @file AC1.cpp
+* @file ForwardChecking.cpp
 * @author Arun Tejasvi Chaganty <arunchaganty@gmail.com>
 * @date 2010-05-08
 * Helvetica - CSP Workbench
-* AC1 implementation
+* Forward Checking implementation
 */
 
 #include <cstdlib>
@@ -15,23 +15,23 @@
 #include "Helvetica.h"
 #include "CSP.h"
 #include "CSPSolver.h"
-#include "AC1.h"
+#include "ForwardChecking.h"
 
 using namespace std;
 
 namespace Helvetica
 {
     // Components
-    void AC1Backtracker::save( CSPSolution& sol, Assignment assn )
+    void ForwardCheckingBacktracker::save( CSPSolution& sol, Assignment assn )
     {
         Backtracker::save( sol, assn );
 
         // Get the disabled bits from the preprocessor
-        AC1Preprocessor& pp = dynamic_cast< AC1Preprocessor& >( sol.solver->getPreprocessor() );
-        vector<bv_t> disabled = vector<bv_t>( pp.getLastDisabled() );
+        ForwardCheckingValueSelector& vs = dynamic_cast< ForwardCheckingValueSelector& >( sol.solver->getValueSelector() );
+        vector<bv_t> disabled = vector<bv_t>( vs.getLastDisabled() );
         disabled_memory.push( disabled );
     }
-    void AC1Backtracker::updateDisabled( Assignment assn )
+    void ForwardCheckingBacktracker::updateDisabled( Assignment assn )
     {
         if( disabled_memory.size() > 0 )
         {
@@ -40,7 +40,7 @@ namespace Helvetica
         }
     }
 
-    CSPSolution& AC1Backtracker::backtrack( CSPSolution& sol )
+    CSPSolution& ForwardCheckingBacktracker::backtrack( CSPSolution& sol )
     {
         if( memory.size() == 0 )
             throw runtime_error( "Unsolvable" ); 
@@ -63,7 +63,7 @@ namespace Helvetica
         return sol;
     }
 
-    Assignment AC1ValueSelector::select( CSPSolution& sol )
+    Assignment ForwardCheckingValueSelector::select( CSPSolution& sol )
     {
         Assignment assn = make_pair( UNSET, UNSET );
 
@@ -72,8 +72,7 @@ namespace Helvetica
             assn = ValueSelector::select( sol );
             if( assn.second != UNSET )
             {
-                AC1Preprocessor& pp = dynamic_cast< AC1Preprocessor& >( sol.solver->getPreprocessor() );
-                pp.revise( sol, assn );
+                revise( sol, assn );
                 // assn could be set to UNSET
                 if( assn.second != UNSET ) break;
             }
@@ -83,7 +82,7 @@ namespace Helvetica
         return assn;
     }
 
-    void AC1Preprocessor::revise( CSPSolution& sol, Constraint& cnstr, vector<bv_t>& disabled  )
+    void ForwardCheckingValueSelector::revise( CSPSolution& sol, Constraint& cnstr, vector<bv_t>& disabled  )
     {
         int idx0 = cnstr.scope[ 0 ];
         int idx1 = cnstr.scope[ 1 ];
@@ -105,7 +104,7 @@ namespace Helvetica
         sol.assn[ unset_idx ] = UNSET;
     }
 
-    void AC1Preprocessor::revise( CSPSolution& sol, Assignment& assn )
+    void ForwardCheckingValueSelector::revise( CSPSolution& sol, Assignment& assn )
     {
         // Reset last_disabled
         last_disabled.resize( sol.allowable.size() );
@@ -141,7 +140,7 @@ namespace Helvetica
         if( invalid )
         {
             // Store this update in the previous backtrack-point
-            AC1Backtracker& bt = dynamic_cast< AC1Backtracker& >( sol.solver->getBacktracker() );
+            ForwardCheckingBacktracker& bt = dynamic_cast< ForwardCheckingBacktracker& >( sol.solver->getBacktracker() );
             bt.updateDisabled( assn );
             sol.allowable[ assn.first ][ assn.second ] = false;
 
@@ -159,12 +158,7 @@ namespace Helvetica
         sol.assn[ assn.first ] = UNSET;
     }
 
-    CSP& AC1Preprocessor::preprocess( CSP& problem )
-    {
-        return problem;
-    }
-
-    vector<bv_t>& AC1Preprocessor::getLastDisabled()
+    vector<bv_t>& ForwardCheckingValueSelector::getLastDisabled()
     {
         return last_disabled;
     }
