@@ -27,6 +27,7 @@ namespace Helvetica
             NONE,
             FWCHK,
             GASCH,
+            AC3, // Should be changed to a better mechanism - later
         };
 
         Mode mode;

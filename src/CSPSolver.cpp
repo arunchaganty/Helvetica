@@ -145,9 +145,9 @@ namespace Helvetica
         return satisfiable;
     }
 
-    CSP& Preprocessor::preprocess( CSP& problem )
+    CSPSolution& Preprocessor::preprocess( CSPSolution& sol )
     {
-        return problem;
+        return sol;
     }
 
     // CSPSolver
@@ -178,9 +178,8 @@ namespace Helvetica
 
     CSPSolution& CSPSolver::solve( CSP& problem )
     {
-        CSP& problem_ = preprocessor.preprocess( problem );
-        CSPSolution* sol_ = new CSPSolution( problem_, *this );
-        CSPSolution& sol = *sol_;
+        CSPSolution* sol_ = new CSPSolution( problem, *this );
+        CSPSolution& sol = preprocessor.preprocess( *sol_ );
 
         g_Stats.backtracks = 0;
         g_Stats.vs_count = 0;

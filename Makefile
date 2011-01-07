@@ -18,7 +18,9 @@ LDFLAGS +=  `pkg-config --libs libxml-2.0`
 
 LIB_OBJS=obj/CSP.o obj/CSPSolver.o \
 		 obj/Log.o obj/Timer.o \
-		 obj/ForwardChecking.o obj/Gaschnig.o
+		 obj/ForwardChecking.o obj/Gaschnig.o \
+		 obj/AC3.o
+
 BIN_OBJS=obj/main.o
 GLOBAL_HEADERS=
 OBJS=$(LIB_OBJS) $(BIN_OBJS)

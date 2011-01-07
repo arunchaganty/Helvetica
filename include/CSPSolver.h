@@ -100,7 +100,7 @@ namespace Helvetica
          * @returns - (var_idx, val) 
          *            Should be UNSET if no suitable variable exists
          */
-        virtual CSP& preprocess( CSP& problem );
+        virtual CSPSolution& preprocess( CSPSolution& sol );
     };
 
     class CSPSolver

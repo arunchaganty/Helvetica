@@ -3,7 +3,7 @@
 # put common definitions in here
 CC		 = g++
 DEBUG    = -O0 -ggdb # -pg
-CFLAGS	 = $(DEBUG) -Wall -I$(ROOTDIR)include/ -I$(ROOTDIR)/parser/
+CFLAGS	 = -Wall -I$(ROOTDIR)include/ -I$(ROOTDIR)/parser/ $(DEBUG) 
 CXXFLAGS = $(CFLAGS)
-LDFLAGS	 = -g 
+LDFLAGS	 = #-g 
 

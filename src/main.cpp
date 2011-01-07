@@ -20,6 +20,7 @@
 
 #include "ForwardChecking.h"
 #include "Gaschnig.h"
+#include "AC3.h"
 
 using namespace std;
 using namespace Helvetica;
@@ -48,6 +49,7 @@ struct Settings
     enum PreprocessorOptions
     {
         PP_NONE,
+        PP_AC3,
     };
 
     BacktrackerOptions Backtracker;
@@ -64,6 +66,8 @@ struct Settings
                 return Settings( BT_FWCHK, VS_FWCHK, PP_NONE );
             case( Options::GASCH ):
                 return Settings( BT_GASCH, VS_GASCH, PP_NONE );
+            case( Options::AC3 ):
+                return Settings( BT_NONE, VS_NONE, PP_AC3 );
             case( Options::NONE ):
             default:
                 return Settings( BT_NONE, VS_NONE, PP_NONE );
@@ -112,6 +116,9 @@ CSPSolver& create( Settings settings )
         case Settings::PP_NONE: 
             pp = new Preprocessor();
             break;
+        case Settings::PP_AC3: 
+            pp = new AC3Preprocessor();
+            break;
         default:
             throw runtime_error( "Invalid option" );
     }
@@ -124,6 +131,7 @@ CSPSolver& create( Settings settings )
 static struct option options[] = {
     { "forward-check", no_argument, NULL, Options::FWCHK },
     { "gaschnig", no_argument, NULL, Options::GASCH },
+    { "ac3", no_argument, NULL, Options::AC3 },
 };
 
 void print_help( FILE* file, char* argv[] )
@@ -134,6 +142,7 @@ void print_help( FILE* file, char* argv[] )
     fprintf( file, "\t-v \t--\t Verbose\n" );
     fprintf( file, "\t--forward-check \t--\t Forward-checking\n" );
     fprintf( file, "\t--gaschnig \t--\t Gaschnig's Backjumping\n" );
+    fprintf( file, "\t--ac3 \t--\t AC3\n" );
 }
 
 bool is_file( string fname )
@@ -177,6 +186,9 @@ int main( int argc, char* argv[] )
                 break;
             case Options::GASCH:
                 g_Options.plan = Options::GASCH;
+                break;
+            case Options::AC3:
+                g_Options.plan = Options::AC3;
                 break;
             default: /* '?' */
                 print_help( stderr, argv );
