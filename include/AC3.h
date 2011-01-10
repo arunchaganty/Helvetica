@@ -34,7 +34,8 @@ namespace Helvetica
         virtual CSPSolution& preprocess( CSPSolution& sol );
 
     private:
-        void revise( CSPSolution& sol, Constraint& cnstr, int change);  //revise function
+        bool revise( CSPSolution& sol, vars vartuple);  //revise function
+        void print( CSPSolution& sol);
     };
 };
 

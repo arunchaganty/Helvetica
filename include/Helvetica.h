@@ -11,6 +11,8 @@
 #include <sys/time.h>
 #include "Log.h"
 #include "Timer.h"
+#include <vector>
+using namespace std;
 
 namespace Helvetica 
 {

@@ -23,107 +23,127 @@ using namespace std;
 namespace Helvetica
 {
     typedef pair<int, int> vars;
+    int change=0;    
+
+    bool bv_val( vector<bool> v, int i )
+    {
+        return v[ i ];
+    }
+    void bv_print( vector<bool> v )
+    {
+        for( int i = 0; i < v.size(); i++ )
+        {
+            printf( "%d", (v[i])?1:0 );
+        }
+        printf( "\n" );
+    }
     
     CSPSolution& AC3Preprocessor::preprocess( CSPSolution& sol )
     {
+        printf("ac-3 started\n");
+
         queue<vars> q;
         vars a;
-        // adding all tuples  (xi,xj) into queue.
-        for(unsigned int i=0; i< sol.problem->constraints.size();i++)
+
+        printf("adding all tuples to queue\n");
+        for( unsigned int i = 0; i < sol.problem->variables.size(); i++ )
         {
-           for(unsigned int j=0;j< sol.problem->constraints[i]->scope.size();j++)
-              for(unsigned int k=j+1;k< sol.problem->constraints[i]->scope.size();k++)
-              {
-                 a.first=j;
-                 a.second=k;
-                 q.push(a);
-                 a.first=k;
-                 a.second=j;
-                 q.push(a);
-              }
+            for( unsigned int j = i+1; j < sol.problem->variables.size(); j++ )
+            {
+                vector<Constraint*>::iterator cnstr;
+                for( cnstr = sol.problem->constraints.begin(); cnstr != sol.problem->constraints.end(); cnstr++ )
+                {
+                    unsigned int idx0 = (*cnstr)->scope[0];
+                    unsigned int idx1 = (*cnstr)->scope[1];
+                    if( (*cnstr)->scope.size() == 2 &&
+                          ( ( idx0 == i && idx1 == j ) || ( idx1 == i && idx0 == j ) ) )
+                    {
+                        q.push( make_pair( i, j ) );
+                        q.push( make_pair( j, i ) );
+                    }
+                }
+            }
         }
 
-        int change=0;
-        vars vartuple;
         while(q.size()!=0)
         {
-           vartuple = q.front();
-           q.pop();
-           int idx0=vartuple.first;
-           int idx1=vartuple.second;
-           for(unsigned int i=0;i<sol.problem->constraints.size();i++)
+           vars vartuple = q.front(); q.pop();
+           unsigned int idx0 = vartuple.first;
+
+           if( revise( sol, vartuple ) )
            {
-              int count=0;
-              for(unsigned int j=0;j<sol.problem->constraints[i]->scope.size();j++)
-                 if((idx0==sol.problem->constraints[i]->scope[j])||(idx1==sol.problem->constraints[i]->scope[j]))
-                   count++;
-              if(count==2)
-              {
-                 revise(sol,(*sol.problem->constraints[i]),change);
-                 if(change==1)
-                 {
-                   for(unsigned int l=0;l<sol.problem->variables.size();l++)
-                   {
-                      if(l!=(unsigned int)idx0)
-                      {
-                         vartuple.first=l;
-                         vartuple.second=idx0;
-                         q.push(vartuple);
-                      }
-                   }
-                 }
-              }
-           }
-        }
-        
-        return sol;
-    }
-        
-    void AC3Preprocessor::revise( CSPSolution& sol, Constraint& cnstr, int change)  //revise function
-    {
-        int idx0 = cnstr.scope[ 0 ];
-        int idx1 = cnstr.scope[ 1 ];
-        
-        if( cnstr.arity != 2 ) return;
-        
-        for(unsigned int i=0;i<sol.problem->domains[idx0].size();i++)
-        {
-           int pair_found=0;
-           if(!sol.allowable[idx0][i]==UNSET)continue;
-           for(unsigned int j=0;j<sol.problem->domains[idx1].size();j++)
-           {
-                if(!sol.allowable[idx1][j]==UNSET) continue;
-                vector<int> v(sol.problem->variables.size(),UNSET);
-                v[idx0]=sol.allowable[idx0][i];
-                v[idx1]=sol.allowable[idx1][j];                
-                if(cnstr.test(v))
+                for( unsigned int i = 0; i < sol.problem->variables.size(); i++ )
                 {
-                     pair_found=1;
-                     break;
+                    if( i != idx0 ) q.push( make_pair( i, idx0 ) );
                 }
            }
-           if(pair_found==0)
-           {
-             sol.allowable[idx0][i]=UNSET;
-             change=1;
-           }
         }
+
+        printf("ac-3 done\n");
+        return sol;
+    }
+
+    void AC3Preprocessor::print( CSPSolution& sol )    
+    {
+       for(unsigned int i=0;i<sol.allowable.size();i++)
+       {
+          int d=sol.problem->variables[i];
+          printf("variable %d no. of values in domain %d: ",i, sol.problem->domains[d].size());
+          for(unsigned int j=0;j<sol.allowable[i].size();j++)
+          {
+             if(sol.allowable[i][j])
+               printf("%d ",j);
+          }
+          printf("\n");
+        }
+//        printf("printing done\n");
+    }
+
+    bool AC3Preprocessor::revise( CSPSolution& sol, vars vartuple)  //revise function
+    {
+        bool changed = false;
+
+        vector<Constraint*>::iterator cnstr;
+        for( cnstr = sol.problem->constraints.begin(); cnstr != sol.problem->constraints.end(); cnstr++ )
+        {
+            int v0 = vartuple.first;
+            int v1 = vartuple.second;
+            if( (*cnstr)->scope.size() != 2 ) continue;
+            int idx0 = (*cnstr)->scope[ 0 ];
+            int idx1 = (*cnstr)->scope[ 1 ];
+
+            if( !( ( idx0 == v0 && idx1 == v1 ) ||
+                    ( idx1 == v0 && idx0 == v1) ) ) continue;
+
+            int d0 = sol.problem->variables[ v0 ];
+            int d1 = sol.problem->variables[ v1 ];        
+            
+            for(unsigned int i=0; i<sol.problem->domains[d0].size(); i++)
+            {  
+               bool pair_found = false;
+               if(!sol.allowable[v0][i]) continue;
+
+               for( unsigned int j=0; j<sol.problem->domains[d1].size() && !pair_found; j++)
+               {
+                    if(!sol.allowable[v1][j]) continue;
+
+                    vector<int> v(sol.problem->variables.size(),UNSET);
+                    v[v0]=i;
+                    v[v1]=j;                
+
+                    pair_found = (*cnstr)->test(v);
+               }
+
+               if(!pair_found)
+               {
+                 sol.allowable[v0][i] = false;
+                 changed = true;
+               }
+            }
+        }
+
+        return changed;
     }    
         
-/*
-        int unset_idx = (sol.assn[ idx0 ] == UNSET) ? idx0 : idx1;
-
-        Domain& dom = sol.problem->domains[ sol.problem->variables[ unset_idx ] ];
-
-        for( unsigned int i = 0; i < dom.size(); i++ )
-        {
-            if( !sol.allowable[ unset_idx ][ i ] ) continue;
-
-            sol.assn[ unset_idx ] = i;
-            disabled[ unset_idx ][ i ] = disabled[ unset_idx ][ i ] | !cnstr.test( sol.assn );
-            sol.allowable[ unset_idx ][ i ] = sol.allowable[ unset_idx ][ i ] & cnstr.test( sol.assn );
-        }
-        sol.assn[ unset_idx ] = UNSET;
-        */
 };
 

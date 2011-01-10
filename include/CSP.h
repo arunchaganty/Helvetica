@@ -41,7 +41,15 @@ namespace Helvetica
         Relation( int arity, Semantics semantics );
         inline bool test( vector<int>& value )
         {
-            return semantics ^ ( values.find( value ) != values.end() );
+            switch( semantics )
+            {
+                case SUPPORTS:
+                    return ( values.find( value ) != values.end() );
+                case CONFLICTS:
+                    return !( values.find( value ) != values.end() );
+                default:
+                    return false;
+            }
         }
         bool test( int n, int v1, ... );
     };
